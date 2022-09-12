@@ -23,10 +23,10 @@
     <div class="wrap">
         <main class="Middle-main">
             <ul class="breadcrumbs"
-                th:replace="~{fragments/breadcrumb_fragment :: breadcrumps(category='Популярное')}"></ul>
+                th:replace="~{fragments/breadcrumb_fragment :: breadcrumps(category=#{topbar.popular})}"></ul>
             <div class="Section">
                 <div class="Section-header">
-                    <h1 class="Section-title">Популярное
+                    <h1 class="Section-title" th:text="#{topbar.popular}">Популярное
                     </h1>
                 </div>
                 <div class="Cards Cards_refresh"
