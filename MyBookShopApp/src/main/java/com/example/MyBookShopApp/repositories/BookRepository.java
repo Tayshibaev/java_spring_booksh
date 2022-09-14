@@ -1,5 +1,6 @@
-package com.example.MyBookShopApp.data;
+package com.example.MyBookShopApp.repositories;
 
+import com.example.MyBookShopApp.data.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,6 +30,14 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query(value = "SELECT * FROM books WHERE discount = (SELECT MAX(discount) FROM books)", nativeQuery = true)
     List<Book> getBooksWithMaxDiscount();
+
+    //Новинки будут выводиться в порядке убывания по дате
+    @Query(value = "from Book b order by b.pubDate desc")
+    Page<Book> findAllOrderedDate(Pageable nextPage);
+
+    //Новинки будут выводиться в порядке убывания по дате
+    @Query(value = "from Book b order by b.isBestseller desc, b.pubDate desc")
+    Page<Book> findAllOrderedIsBestsellerAndDate(Pageable nextPage);
 
     Page<Book> findBookByTitleContaining(String bookTitle, Pageable nextPage);
 }
