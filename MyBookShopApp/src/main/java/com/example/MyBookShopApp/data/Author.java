@@ -22,6 +22,15 @@ public class Author {
     @ApiModelProperty(value = "last name of author",example = "Blaskovits", position = 3)
     private String lastName;
 
+//    @Column(columnDefinition = "TEXT")
+//    private String description;
+//
+//    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+//    private String slug;
+//
+//    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+//    private String photo;
+
     @OneToMany(mappedBy = "author")
     @JsonIgnore
     private List<Book> bookList = new ArrayList<>();
