@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Integer> {
@@ -34,6 +35,10 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     //Новинки будут выводиться в порядке убывания по дате
     @Query(value = "from Book b order by b.pubDate desc")
     Page<Book> findAllOrderedDate(Pageable nextPage);
+
+    //Новинки будут выводиться в порядке убывания по дате
+    @Query(value = "from Book b where b.pubDate >= ?1 and b.pubDate<= ?2 order by b.pubDate desc")
+    Page<Book> findAllFromToDateOrderedDate(Date fromm, Date to, Pageable nextPage);
 
     //Новинки будут выводиться в порядке убывания по дате
     @Query(value = "from Book b order by b.isBestseller desc, b.pubDate desc")

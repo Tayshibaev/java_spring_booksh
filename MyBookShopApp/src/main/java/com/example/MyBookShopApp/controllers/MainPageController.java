@@ -9,7 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -52,6 +55,29 @@ public class MainPageController {
         return "index";
     }
 
+    @GetMapping("/recent")
+    public String recentPage() {
+        return "books/recent";
+    }
+
+//    @GetMapping("/books/recent")
+//    @ResponseBody
+//    public BooksPageDto getRecentBooksPage(@RequestParam("offset") Integer offset,
+//                                           @RequestParam("limit") Integer limit) {
+//        return new BooksPageDto(bookService.getPageOfRecentBooks(offset, limit).getContent());
+//    }
+
+    @GetMapping("/books/recent")
+    @ResponseBody
+    public BooksPageDto getFromToDateRecentBooksPage(@RequestParam(value = "from", required = false) String from,
+                                                     @RequestParam(value = "to", required = false) String to,
+                                                     @RequestParam("offset") Integer offset,
+                                                     @RequestParam("limit") Integer limit) throws ParseException {
+        return new BooksPageDto(bookService.getPageFromToDateOfRecentBooks(from != null ? new SimpleDateFormat("dd.MM.yyyy").parse(from) : null,
+                to != null ? new SimpleDateFormat("dd.MM.yyyy").parse(to) : null,
+                offset, limit).getContent());
+    }
+
     @GetMapping("/books/recommended")
     @ResponseBody
     public BooksPageDto getBooksPage(@RequestParam("offset") Integer offset,
@@ -59,17 +85,10 @@ public class MainPageController {
         return new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit).getContent());
     }
 
-    @GetMapping("/books/recent")
-    @ResponseBody
-    public BooksPageDto getRecentBooksPage(@RequestParam("offset") Integer offset,
-                                     @RequestParam("limit") Integer limit) {
-        return new BooksPageDto(bookService.getPageOfRecentBooks(offset, limit).getContent());
-    }
-
     @GetMapping("/books/popular")
     @ResponseBody
     public BooksPageDto getPopularBooksPage(@RequestParam("offset") Integer offset,
-                                     @RequestParam("limit") Integer limit) {
+                                            @RequestParam("limit") Integer limit) {
         return new BooksPageDto(bookService.getPageOfPopularBooks(offset, limit).getContent());
     }
 
