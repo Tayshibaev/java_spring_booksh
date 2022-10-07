@@ -1,7 +1,11 @@
 package com.example.MyBookShopApp.data.user;
 
+import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -14,14 +18,17 @@ public class UserEntity {
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String hash;
 
-    @Column(columnDefinition = "TIMESTAMP NOT NULL")
-    private LocalDateTime regTime;
+    @Column(name = "regtime")
+    private Date regTime;
 
     @Column(columnDefinition = "INT NOT NULL")
     private int balance;
 
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
+
+    @OneToMany(mappedBy = "userId")
+    private List<Book2UserEntity> booksToUserEntity;
 
     public int getId() {
         return id;
@@ -39,11 +46,11 @@ public class UserEntity {
         this.hash = hash;
     }
 
-    public LocalDateTime getRegTime() {
+    public Date getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(LocalDateTime regTime) {
+    public void setRegTime(Date regTime) {
         this.regTime = regTime;
     }
 

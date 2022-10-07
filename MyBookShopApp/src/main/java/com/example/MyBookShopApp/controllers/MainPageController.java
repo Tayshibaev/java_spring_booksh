@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.services.BookService;
 import com.example.MyBookShopApp.DTO.BooksPageDto;
 import com.example.MyBookShopApp.DTO.SearchWordDto;
+import com.example.MyBookShopApp.services.BooksRatingAndPopulatityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,10 +20,14 @@ import java.util.List;
 public class MainPageController {
 
     private final BookService bookService;
+    private final BooksRatingAndPopulatityService bookPopularService;
 
     @Autowired
-    public MainPageController(BookService bookService) {
+    public MainPageController(BookService bookService
+            , BooksRatingAndPopulatityService bookPopularService
+    ) {
         this.bookService = bookService;
+        this.bookPopularService = bookPopularService;
     }
 
     @ModelAttribute("recommendedBooks")
@@ -37,7 +42,7 @@ public class MainPageController {
 
     @ModelAttribute("popularBooks")
     public List<Book> popularBooks() {
-        return bookService.getPageOfPopularBooks(0, 6).getContent();
+        return bookPopularService.getRatingPopularBooks(0, 20);
     }
 
     @ModelAttribute("searchWordDto")
@@ -58,6 +63,11 @@ public class MainPageController {
     @GetMapping("/recent")
     public String recentPage() {
         return "books/recent";
+    }
+
+    @GetMapping("/popular")
+    public String popularPage() {
+        return "books/popular";
     }
 
 //    @GetMapping("/books/recent")
@@ -89,7 +99,7 @@ public class MainPageController {
     @ResponseBody
     public BooksPageDto getPopularBooksPage(@RequestParam("offset") Integer offset,
                                             @RequestParam("limit") Integer limit) {
-        return new BooksPageDto(bookService.getPageOfPopularBooks(offset, limit).getContent());
+        return new BooksPageDto(bookPopularService.getRatingPopularBooks(offset, limit));
     }
 
     @GetMapping(value = {"/search", "/search/{searchWord}"})

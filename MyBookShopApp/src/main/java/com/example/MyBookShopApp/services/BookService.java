@@ -1,6 +1,7 @@
 package com.example.MyBookShopApp.services;
 
 import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.repositories.BookRatingRepository;
 import com.example.MyBookShopApp.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private BookRepository bookRepository;
+
+    @Autowired
+    private BookRatingRepository bookRepositoryR;
 
     @Autowired
     public BookService(BookRepository bookRepository) {
@@ -74,6 +78,7 @@ public class BookService {
 
     public Page<Book> getPageOfPopularBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
+       // bookRepositoryR.findBooksRatingDesc(nextPage).getContent().forEach(System.out::println);
         return bookRepository.findAllOrderedIsBestsellerAndDate(nextPage);
     }
 

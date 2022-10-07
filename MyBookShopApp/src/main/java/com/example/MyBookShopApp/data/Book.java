@@ -1,6 +1,6 @@
 package com.example.MyBookShopApp.data;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -27,6 +28,9 @@ public class Book {
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     @JsonIgnore
     private Author author;
+
+    @OneToMany(mappedBy = "bookId")
+    private List<Book2UserEntity> book2UserEntities;
 
     @Column(name = "is_bestseller")
     @ApiModelProperty("if isBestseller = 1 so the book is considered to be bestseller and  if 0 the book is not a " +
@@ -53,6 +57,10 @@ public class Book {
     @JsonProperty("discount")
     @ApiModelProperty("discount value for book")
     private Double price;
+
+    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private BookPopular bookPopular;
 
     public Date getPubDate() {
         return pubDate;
@@ -133,6 +141,14 @@ public class Book {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+//    public List<Book2UserEntity> getBook2UserEntities() {
+//        return book2UserEntities;
+//    }
+//
+//    public void setBook2UserEntities(List<Book2UserEntity> book2UserEntities) {
+//        this.book2UserEntities = book2UserEntities;
+//    }
 
     @Override
     public String toString() {

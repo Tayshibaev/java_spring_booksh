@@ -40,7 +40,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query(value = "from Book b where b.pubDate >= ?1 and b.pubDate<= ?2 order by b.pubDate desc")
     Page<Book> findAllFromToDateOrderedDate(Date fromm, Date to, Pageable nextPage);
 
-    //Новинки будут выводиться в порядке убывания по дате
+    //Заглушка для популярных
     @Query(value = "from Book b order by b.isBestseller desc, b.pubDate desc")
     Page<Book> findAllOrderedIsBestsellerAndDate(Pageable nextPage);
 
