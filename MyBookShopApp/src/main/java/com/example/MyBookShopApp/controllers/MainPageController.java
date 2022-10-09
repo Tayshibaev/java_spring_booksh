@@ -92,11 +92,8 @@ public class MainPageController {
 
     @GetMapping("/tagPage/{tagName}")
     public String tagsPage(@PathVariable(value = "tagName") String id, Model model) {
-       // Long idd = Long.parseLong(id);
-        System.out.println("NAME:" + id);
         TagEntity tag = bookAndTagsService.getTagByName(id);
         List<Book> booksByTag = bookAndTagsService.getBooksByTagName(id, 0, 5).getContent();
-        // booksByTag.forEach(System.out::println);
         model.addAttribute("tagName", tag);
         model.addAttribute("booksByTag", booksByTag);
         return "tags/index";
@@ -133,7 +130,6 @@ public class MainPageController {
                                  @RequestParam("limit") Integer limit, @PathVariable("id") Long id) {
         List<Book> booksByTag = bookAndTagsService.getBooksByTagId(id,
                 offset, limit).getContent();
-        System.out.println("ВОТ ТУТ СМОТРЕТЬ КАКИЕ КНИГИ ПО ТЕГУ АЙДИ");
         booksByTag.forEach(System.out::println);
         return new BooksPageDto(booksByTag);
     }
