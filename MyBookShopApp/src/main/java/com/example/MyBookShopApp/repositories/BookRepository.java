@@ -1,6 +1,7 @@
 package com.example.MyBookShopApp.repositories;
 
 import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.data.TagEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,4 +46,15 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     Page<Book> findAllOrderedIsBestsellerAndDate(Pageable nextPage);
 
     Page<Book> findBookByTitleContaining(String bookTitle, Pageable nextPage);
+
+    @Query(value = "select b.* from book2tag bt " +
+            "join books b on bt.book_id = b.id " +
+            " where bt.tag_id = ?1 order by b.title", nativeQuery = true)
+    Page<Book> getBooksByTagId(Long idTag, Pageable nextPage);
+
+    @Query(value = "select b.* from book2tag bt " +
+            "join books b on bt.book_id = b.id " +
+            "join tags ts on bt.tag_id = ts.id " +
+            " where ts.name = ?1 order by b.title", nativeQuery = true)
+    Page<Book> getBooksByTagName(String name, Pageable nextPage);
 }

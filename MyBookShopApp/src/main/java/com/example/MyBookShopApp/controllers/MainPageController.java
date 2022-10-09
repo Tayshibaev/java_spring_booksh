@@ -1,6 +1,8 @@
 package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.data.TagEntity;
+import com.example.MyBookShopApp.services.BookAndTagsService;
 import com.example.MyBookShopApp.services.BookService;
 import com.example.MyBookShopApp.DTO.BooksPageDto;
 import com.example.MyBookShopApp.DTO.SearchWordDto;
@@ -21,13 +23,16 @@ public class MainPageController {
 
     private final BookService bookService;
     private final BooksRatingAndPopulatityService bookPopularService;
+    private final BookAndTagsService bookAndTagsService;
 
     @Autowired
     public MainPageController(BookService bookService
             , BooksRatingAndPopulatityService bookPopularService
+            , BookAndTagsService bookAndTagsService
     ) {
         this.bookService = bookService;
         this.bookPopularService = bookPopularService;
+        this.bookAndTagsService = bookAndTagsService;
     }
 
     @ModelAttribute("recommendedBooks")
@@ -43,6 +48,21 @@ public class MainPageController {
     @ModelAttribute("popularBooks")
     public List<Book> popularBooks() {
         return bookPopularService.getRatingPopularBooks(0, 20);
+    }
+
+    @ModelAttribute("tags")
+    public List<TagEntity> tags() {
+        return bookAndTagsService.getTags();
+    }
+
+    @ModelAttribute("tagName")
+    public TagEntity tag() {
+        return new TagEntity();
+    }
+
+    @ModelAttribute("booksByTag")
+    public List<Book> booksByTag() {
+        return new ArrayList<>();
     }
 
     @ModelAttribute("searchWordDto")
@@ -70,6 +90,18 @@ public class MainPageController {
         return "books/popular";
     }
 
+    @GetMapping("/tagPage/{tagName}")
+    public String tagsPage(@PathVariable(value = "tagName") String id, Model model) {
+       // Long idd = Long.parseLong(id);
+        System.out.println("NAME:" + id);
+        TagEntity tag = bookAndTagsService.getTagByName(id);
+        List<Book> booksByTag = bookAndTagsService.getBooksByTagName(id, 0, 5).getContent();
+        // booksByTag.forEach(System.out::println);
+        model.addAttribute("tagName", tag);
+        model.addAttribute("booksByTag", booksByTag);
+        return "tags/index";
+    }
+
 //    @GetMapping("/books/recent")
 //    @ResponseBody
 //    public BooksPageDto getRecentBooksPage(@RequestParam("offset") Integer offset,
@@ -93,6 +125,17 @@ public class MainPageController {
     public BooksPageDto getBooksPage(@RequestParam("offset") Integer offset,
                                      @RequestParam("limit") Integer limit) {
         return new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit).getContent());
+    }
+
+    @GetMapping("/books/tag/{id}")
+    @ResponseBody
+    public BooksPageDto tagsPage(@RequestParam("offset") Integer offset,
+                                 @RequestParam("limit") Integer limit, @PathVariable("id") Long id) {
+        List<Book> booksByTag = bookAndTagsService.getBooksByTagId(id,
+                offset, limit).getContent();
+        System.out.println("ВОТ ТУТ СМОТРЕТЬ КАКИЕ КНИГИ ПО ТЕГУ АЙДИ");
+        booksByTag.forEach(System.out::println);
+        return new BooksPageDto(booksByTag);
     }
 
     @GetMapping("/books/popular")

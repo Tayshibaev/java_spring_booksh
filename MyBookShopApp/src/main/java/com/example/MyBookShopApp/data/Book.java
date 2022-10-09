@@ -62,6 +62,14 @@ public class Book {
     @PrimaryKeyJoinColumn
     private BookPopular bookPopular;
 
+    @ManyToMany
+    @JoinTable(name="book2tag",
+            joinColumns = @JoinColumn(name="book_id", referencedColumnName="id"),
+            inverseJoinColumns = @JoinColumn(name="tag_id", referencedColumnName="id")
+    )
+    private List<TagEntity> tags;
+
+
     public Date getPubDate() {
         return pubDate;
     }
