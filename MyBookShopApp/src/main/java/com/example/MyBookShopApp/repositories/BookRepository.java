@@ -57,4 +57,10 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             "join tags ts on bt.tag_id = ts.id " +
             " where ts.name = ?1 order by b.title", nativeQuery = true)
     Page<Book> getBooksByTagName(String name, Pageable nextPage);
+
+    @Query(value = "select b.* from books b " +
+            "join book2genre bg on b.id = bg.book_id " +
+            "join genre gg on gg.id = bg.genre_id " +
+            "where gg.id = ?1", nativeQuery = true)
+    Page<Book> getBookByGenreId(Integer idGenre, Pageable nextPage);
 }

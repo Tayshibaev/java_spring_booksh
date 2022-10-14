@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.data;
 
+import com.example.MyBookShopApp.data.book.links.Book2GenreEntity;
 import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,6 +32,9 @@ public class Book {
 
     @OneToMany(mappedBy = "bookId")
     private List<Book2UserEntity> book2UserEntities;
+
+    @OneToMany(mappedBy = "bookId")
+    private List<Book2GenreEntity> book2GenreEntity;
 
     @Column(name = "is_bestseller")
     @ApiModelProperty("if isBestseller = 1 so the book is considered to be bestseller and  if 0 the book is not a " +
