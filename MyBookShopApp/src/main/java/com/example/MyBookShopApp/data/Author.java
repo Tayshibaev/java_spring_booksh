@@ -22,14 +22,14 @@ public class Author {
     @ApiModelProperty(value = "last name of author",example = "Blaskovits", position = 3)
     private String lastName;
 
-//    @Column(columnDefinition = "TEXT")
-//    private String description;
-//
-//    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-//    private String slug;
-//
-//    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-//    private String photo;
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+    private String slug;
+
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
+    private String photo;
 
     @OneToMany(mappedBy = "author")
     @JsonIgnore
@@ -41,11 +41,6 @@ public class Author {
 
     public void setBookList(List<Book> bookList) {
         this.bookList = bookList;
-    }
-
-    @Override
-    public String toString() {
-        return firstName + ' ' + lastName;
     }
 
     public Integer getId() {
@@ -72,5 +67,36 @@ public class Author {
         this.lastName = lastName;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
 }

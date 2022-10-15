@@ -29,4 +29,12 @@ public class AuthorService {
             return a.getLastName().substring(0, 1);
         }));
     }
+
+    public Author authorBySlug(String slug) {
+        return authorRepository.getAuthorBySlug(slug);
+    }
+
+    public Author authorById(Integer id) {
+        return authorRepository.getAuthorById(id);
+    }
 }
