@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="genreFragement">
+    <div th:each="genre : ${mainGenree}">
+        <div class="Tag">
+            <a href="/genres/slug.html"
+               th:href="'/genres/' + ${genre.slug}"
+               th:text="${genre.name}+'('+${genre.getBook2GenreEntity().size()}+')'">Детективы<span>(10)</span></a>
+<!--            th:text="${genre.getBook2GenreEntity().size()}"-->
+            <!--            class="undefined-amount"-->
+        </div>
+        <div class="Tags">
+        <div th:replace="~{genres/genres_fragment :: genreFragement(mainGenree=${genre.getChildEntities()})}"></div>
+
+    </div>
+</div>
+</div>
+</html>
