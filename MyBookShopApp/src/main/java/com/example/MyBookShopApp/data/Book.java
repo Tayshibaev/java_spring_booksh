@@ -3,6 +3,7 @@ package com.example.MyBookShopApp.data;
 import com.example.MyBookShopApp.data.book.file.BookFile;
 import com.example.MyBookShopApp.data.book.links.Book2GenreEntity;
 import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -31,6 +32,11 @@ public class Book {
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     @JsonIgnore
     private Author author;
+
+    @JsonGetter("authors")
+    public String authorsFullName() {
+        return author.toString();
+    }
 
     @OneToMany(mappedBy = "bookId")
     private List<Book2UserEntity> book2UserEntities;
@@ -65,7 +71,12 @@ public class Book {
     private Double price;
 
     @JsonProperty
-    public Integer discountPrice(){
+    public Integer discountRound() {
+        return Double.valueOf(price * 100).intValue();
+    }
+
+    @JsonProperty
+    public Integer discountPrice() {
         Integer discountedPriceInt = priceOld - Math.toIntExact(Math.round(price * priceOld));
         return discountedPriceInt;
     }
@@ -86,9 +97,9 @@ public class Book {
     private BookPopular bookPopular;
 
     @ManyToMany
-    @JoinTable(name="book2tag",
-            joinColumns = @JoinColumn(name="book_id", referencedColumnName="id"),
-            inverseJoinColumns = @JoinColumn(name="tag_id", referencedColumnName="id")
+    @JoinTable(name = "book2tag",
+            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id")
     )
     private List<TagEntity> tags;
 
@@ -168,7 +179,7 @@ public class Book {
     public Double getPrice() {
         return price;
     }
-    
+
     public void setPrice(Double price) {
         this.price = price;
     }

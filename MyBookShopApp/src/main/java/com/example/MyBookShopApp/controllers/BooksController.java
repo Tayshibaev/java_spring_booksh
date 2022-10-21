@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.controllers;
 
+import com.example.MyBookShopApp.DTO.SearchWordDto;
 import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.ResourceStorage;
 import com.example.MyBookShopApp.repositories.BookRepository;
@@ -23,6 +24,11 @@ public class BooksController {
 
     private final BookRepository bookRepository;
     private final ResourceStorage storage;
+
+    @ModelAttribute("searchWordDto")
+    public SearchWordDto searchWordDto() {
+        return new SearchWordDto();
+    }
 
     @Autowired
     public BooksController(BookRepository bookRepository, ResourceStorage storage) {

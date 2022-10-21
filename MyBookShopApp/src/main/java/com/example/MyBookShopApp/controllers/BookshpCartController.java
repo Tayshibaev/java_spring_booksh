@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.controllers;
 
+import com.example.MyBookShopApp.DTO.SearchWordDto;
 import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class BookshpCartController {
     @ModelAttribute(name = "bookCart")
     public List<Book> bookCart() {
         return new ArrayList<>();
+    }
+
+    @ModelAttribute("searchWordDto")
+    public SearchWordDto searchWordDto() {
+        return new SearchWordDto();
     }
 
     private final BookRepository bookRepository;
