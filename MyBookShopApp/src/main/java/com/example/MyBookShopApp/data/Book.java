@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.data;
 
+import com.example.MyBookShopApp.data.book.file.BookFile;
 import com.example.MyBookShopApp.data.book.links.Book2GenreEntity;
 import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -61,6 +63,23 @@ public class Book {
     @JsonProperty("discount")
     @ApiModelProperty("discount value for book")
     private Double price;
+
+    @JsonProperty
+    public Integer discountPrice(){
+        Integer discountedPriceInt = priceOld - Math.toIntExact(Math.round(price * priceOld));
+        return discountedPriceInt;
+    }
+
+    @OneToMany(mappedBy = "book")
+    private List<BookFile> bookFileList = new ArrayList<>();
+
+    public List<BookFile> getBookFileList() {
+        return bookFileList;
+    }
+
+    public void setBookFileList(List<BookFile> bookFileList) {
+        this.bookFileList = bookFileList;
+    }
 
     @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
