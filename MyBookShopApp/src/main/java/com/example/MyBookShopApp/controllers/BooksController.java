@@ -57,7 +57,7 @@ public class BooksController {
         Book book = bookRepository.findBookBySlug(slug);
         System.out.println("SLUG AND VALUE: " + slug + "  " + value);
         booksRatingStarsService.saveBook2Rating(book, value);
-        return ("redirect:/books/" + slug);
+        return "redirect:/books/" + slug;
     }
 
     @PostMapping("/{slug}/img/save")

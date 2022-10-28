@@ -20,14 +20,7 @@ public class Book2RatingEntity {
     }
 
     @Id
-    /*Заккоментировал, так как не знаю как сохранить запись при помощи save. Не дает из за ошибки duplicate key value violates unique constraint
-    Вручную id из за аннотации GeneratedValue присвоить нельзя
-    Автоматически он присваивает айди = 1
-    При добавлении в бд записи, он видит, что такая уже есть с таким айди и не ошибку выкидывает
-    Как это ошибку обойти я не знаю, нужна помощь
-    Видимо из за того, что данные добавляем в data.sql такое происходит
-    */
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(columnDefinition = "INT NOT NULL", name = "rating")
