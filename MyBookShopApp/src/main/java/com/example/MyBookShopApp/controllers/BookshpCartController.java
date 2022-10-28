@@ -55,7 +55,7 @@ public class BookshpCartController {
 
     @GetMapping("/postponed")
     public String handlePostponedRequest(@CookieValue(value = "keptContents", required = false) String cartContents,
-                                    Model model) {
+                                         Model model) {
         if (cartContents == null || cartContents.equals("")) {
             model.addAttribute("isKeptEmpty", true);
         } else {
@@ -72,16 +72,16 @@ public class BookshpCartController {
 
     @PostMapping("/changeBookStatus/UNLINK/kept/remove/{slug}")
     public String handleRemoveBookFromKeptRequest(@PathVariable("slug") String slug, @CookieValue(name =
-            "keptContents", required = false) String cartContents, HttpServletResponse response, Model model){
+            "keptContents", required = false) String cartContents, HttpServletResponse response, Model model) {
 
-        if (cartContents != null && !cartContents.equals("")){
+        if (cartContents != null && !cartContents.equals("")) {
             ArrayList<String> cookieBooks = new ArrayList<>(Arrays.asList(cartContents.split("/")));
             cookieBooks.remove(slug);
             Cookie cookie = new Cookie("keptContents", String.join("/", cookieBooks));
             cookie.setPath("/books");
             response.addCookie(cookie);
             model.addAttribute("isKeptEmpty", false);
-        }else {
+        } else {
             model.addAttribute("isKeptEmpty", true);
         }
 
@@ -90,16 +90,16 @@ public class BookshpCartController {
 
     @PostMapping("/changeBookStatus/UNLINK/cart/remove/{slug}")
     public String handleRemoveBookFromCartRequest(@PathVariable("slug") String slug, @CookieValue(name =
-            "cartContents", required = false) String cartContents, HttpServletResponse response, Model model){
+            "cartContents", required = false) String cartContents, HttpServletResponse response, Model model) {
 
-        if (cartContents != null && !cartContents.equals("")){
+        if (cartContents != null && !cartContents.equals("")) {
             ArrayList<String> cookieBooks = new ArrayList<>(Arrays.asList(cartContents.split("/")));
             cookieBooks.remove(slug);
             Cookie cookie = new Cookie("cartContents", String.join("/", cookieBooks));
             cookie.setPath("/books");
             response.addCookie(cookie);
             model.addAttribute("isCartEmpty", false);
-        }else {
+        } else {
             model.addAttribute("isCartEmpty", true);
         }
 

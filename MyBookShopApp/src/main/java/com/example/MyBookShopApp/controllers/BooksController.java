@@ -2,8 +2,11 @@ package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.DTO.SearchWordDto;
 import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.ResourceStorage;
+import com.example.MyBookShopApp.data.book.links.Book2RatingEntity;
 import com.example.MyBookShopApp.repositories.BookRepository;
+import com.example.MyBookShopApp.services.BooksRatingStarsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +28,9 @@ public class BooksController {
     private final BookRepository bookRepository;
     private final ResourceStorage storage;
 
+    @Autowired
+    private BooksRatingStarsService booksRatingStarsService;
+
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto() {
         return new SearchWordDto();
@@ -39,8 +45,19 @@ public class BooksController {
     @GetMapping("/{slug}")
     public String bookPage(@PathVariable("slug") String slug, Model model) {
         Book book = bookRepository.findBookBySlug(slug);
+        BookRatingStars stars = booksRatingStarsService.getRatingPopularBooks(book.getId());
+        System.out.println("STARS: " + stars);
         model.addAttribute("slugBook", book);
+        model.addAttribute("stars", stars);
         return "/books/slug";
+    }
+
+    @PostMapping("/stars/{slug}/{value}")
+    public String addStarsRating(@PathVariable("slug") String slug, @PathVariable("value") String value, Model model) {
+        Book book = bookRepository.findBookBySlug(slug);
+        System.out.println("SLUG AND VALUE: " + slug + "  " + value);
+        booksRatingStarsService.saveBook2Rating(book, value);
+        return ("redirect:/books/" + slug);
     }
 
     @PostMapping("/{slug}/img/save")
