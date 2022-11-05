@@ -30,6 +30,11 @@ public class Book2RatingEntity {
     @ManyToOne
     private Book bookId;
 
+    @Column(name = "user_id", columnDefinition = "INT NOT NULL")
+    private int userId;
+
+
+
     @Override
     public String toString() {
         return "Book2RatingEntity{" +
@@ -37,6 +42,14 @@ public class Book2RatingEntity {
                 ", rating=" + rating +
                 ", bookId=" + bookId +
                 '}';
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getId() {

@@ -91,4 +91,12 @@ public class BookService {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findBookByTitleContaining(searchWord, nextPage);
     }
+
+    public Book getBookBySlug(String slug) {
+        return bookRepository.findBookBySlug(slug);
+    }
+
+    public Book getBookById(Integer id) {
+        return bookRepository.getBookById(id);
+    }
 }

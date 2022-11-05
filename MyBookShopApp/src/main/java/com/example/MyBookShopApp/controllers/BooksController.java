@@ -5,8 +5,10 @@ import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.ResourceStorage;
 import com.example.MyBookShopApp.data.book.links.Book2RatingEntity;
+import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
 import com.example.MyBookShopApp.repositories.BookRepository;
 import com.example.MyBookShopApp.services.BooksRatingStarsService;
+import com.example.MyBookShopApp.services.BooksReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Controller
@@ -30,6 +33,9 @@ public class BooksController {
 
     @Autowired
     private BooksRatingStarsService booksRatingStarsService;
+
+    @Autowired
+    private BooksReviewService booksReviewService;
 
     @ModelAttribute("searchWordDto")
     public SearchWordDto searchWordDto() {
@@ -46,9 +52,11 @@ public class BooksController {
     public String bookPage(@PathVariable("slug") String slug, Model model) {
         Book book = bookRepository.findBookBySlug(slug);
         BookRatingStars stars = booksRatingStarsService.getRatingPopularBooks(book.getId());
+        Map<BookReviewEntity, Book2RatingEntity> reviewAndRating = booksReviewService.getBookReviewAndBook2RatingByBookId(book.getId());
         System.out.println("STARS: " + stars);
         model.addAttribute("slugBook", book);
         model.addAttribute("stars", stars);
+        model.addAttribute("review", reviewAndRating);
         return "/books/slug";
     }
 

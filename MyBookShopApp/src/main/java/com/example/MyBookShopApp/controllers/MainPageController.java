@@ -1,14 +1,14 @@
 package com.example.MyBookShopApp.controllers;
 
+import com.example.MyBookShopApp.DTO.BookReviewDto;
+import com.example.MyBookShopApp.DTO.BookReviewLikeDto;
 import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.TagEntity;
+import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
 import com.example.MyBookShopApp.data.genre.GenreEntity;
-import com.example.MyBookShopApp.services.BookAndTagsService;
-import com.example.MyBookShopApp.services.BookService;
+import com.example.MyBookShopApp.services.*;
 import com.example.MyBookShopApp.DTO.BooksPageDto;
 import com.example.MyBookShopApp.DTO.SearchWordDto;
-import com.example.MyBookShopApp.services.BooksRatingAndPopulatityService;
-import com.example.MyBookShopApp.services.GenreAndBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -143,7 +143,7 @@ public class MainPageController {
             System.out.println("PARENT:" + parent);
         }
         parentGenres.forEach(System.out::println);
-        List<Book> books = genreService.getBooksByGenreId(genre.getId(),0,5).getContent();
+        List<Book> books = genreService.getBooksByGenreId(genre.getId(), 0, 5).getContent();
         model.addAttribute("genreBooks", books);
         model.addAttribute("genreParents", parentGenres);
         model.addAttribute("genreSubject", genre);
@@ -189,8 +189,8 @@ public class MainPageController {
     @GetMapping("/books/genre/{id}")
     @ResponseBody
     public BooksPageDto genreElsePage(@RequestParam("offset") Integer offset,
-                                 @RequestParam("limit") Integer limit, @PathVariable("id") Integer id) {
-        List<Book> booksByTag =genreService.getBooksByGenreId(id,
+                                      @RequestParam("limit") Integer limit, @PathVariable("id") Integer id) {
+        List<Book> booksByTag = genreService.getBooksByGenreId(id,
                 offset, limit).getContent();
         booksByTag.forEach(System.out::println);
         return new BooksPageDto(booksByTag);
@@ -219,5 +219,37 @@ public class MainPageController {
                                           @RequestParam("limit") Integer limit,
                                           @PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto) {
         return new BooksPageDto(bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), offset, limit).getContent());
+    }
+
+    @Autowired
+    private BooksReviewService booksReviewService;
+    @Autowired
+    private BooksReviewLikeService booksReviewLikeService;
+
+    @PostMapping(path = "/bookReview", consumes = "application/x-www-form-urlencoded")
+    public String saveCommentBook(
+            //@RequestBody
+            BookReviewDto bookRevDto) {
+        System.out.println(bookRevDto);
+        String bookId = bookRevDto.getBookId();
+        Book book = bookService.getBookBySlug(bookId);
+        String text = bookRevDto.getText();
+        booksReviewService.saveBookReview(book.getId(), text);
+        return "redirect:/books/" + bookId;
+    }
+
+    @PostMapping(path = "/rateBookReview"
+            , consumes = "application/x-www-form-urlencoded"
+    )
+    public String saveLikeBook(BookReviewLikeDto bookRevDto) {
+        System.out.println(bookRevDto);
+        String like = bookRevDto.getValue();
+        String reviewId = bookRevDto.getReviewid();
+        BookReviewEntity bookReview = booksReviewService.getBookReviewByReviewId(Integer.parseInt(reviewId));
+        booksReviewLikeService.saveBookReviewLike(bookReview, like);
+        Book book = bookService.getBookById(bookReview.getBookId());
+        return "redirect:/books/" + book.getSlug()
+                //+ bookId
+                ;
     }
 }

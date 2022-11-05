@@ -1,6 +1,8 @@
 package com.example.MyBookShopApp.data.user;
 
+import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
+import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +31,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userId")
     private List<Book2UserEntity> booksToUserEntity;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private BookReviewEntity bookRatingStars;
 
     public int getId() {
         return id;

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,8 +36,15 @@ public class BooksRatingStarsService {
     }
 
     public void saveBook2Rating(Book book, String value) {
-        Book2RatingEntity book2Rating = new Book2RatingEntity(Integer.parseInt(value), book);
-        book2Rating.setId(book2RatingStarsRepository.findAll().size() + 1);
+        Integer userId = ThreadLocalRandom.current().nextInt(1, 20);
+
+        Book2RatingEntity book2Rating = book2RatingStarsRepository.getBook2RatingEntityByBookIdAndUserId(book, userId);
+        if (book2Rating == null) {
+            book2Rating = new Book2RatingEntity(Integer.parseInt(value), book);
+            book2Rating.setUserId(userId);//Рандоный юзер
+        } else {
+            book2Rating.setRating(Integer.parseInt(value));
+        }
         book2RatingStarsRepository.save(book2Rating);
     }
 
