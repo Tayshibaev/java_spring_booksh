@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.security;
 
 import com.example.MyBookShopApp.security.jwt.JWTRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,9 +10,19 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final JWTRequestFilter filter;
+
+    @Autowired
+    @Qualifier("customAuthenticationEntryPoint")
+    AuthenticationEntryPoint authEntryPoint;
 
     @Autowired
     public SecurityConfig(BookstoreUserDetailsService bookstoreUserDetailsService, JWTRequestFilter filter) {
@@ -49,15 +64,51 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/my", "/profile").authenticated()//.hasRole("USER")
+                .antMatchers("/my", "/profile")
+                //.authenticated()
+                .hasRole("USER")
                 .antMatchers("/**").permitAll()
+//                .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(authEntryPoint)
                 .and().formLogin()
                 .loginPage("/signin").failureUrl("/signin")
+                //  .failureHandler(authenticationFailureHandler())
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/signin").deleteCookies("token")
-                .and().oauth2Login()
-                .and().oauth2Client();
+//                .and().oauth2Login()
+//                .and().oauth2Client()
+        ;
+//        http = http.exceptionHandling()
+//                .authenticationEntryPoint(
+//                        (request, response, ex) -> {
+//                            response.sendError(
+//                                    HttpServletResponse.SC_UNAUTHORIZED,
+//                                    ex.getMessage()
+//                            );
+//                        }
+//                )
+//                .and();
 
-        //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
     }
+
+//    @Bean
+//    RestAuthenticationFailureHandler authenticationFailureHandler() {
+//        return new RestAuthenticationFailureHandler();
+//    }
+
+//    private RequestMatcher PROTECTED_URLS = new OrRequestMatcher(
+//            new AntPathRequestMatcher("/**"),new AntPathRequestMatcher("/**")
+//    );
+
+//    @Bean
+//    AuthenticationFilter authenticationFilter() throws Exception {
+//
+//        filter.setAuthenticationManager(authenticationManager());
+//        filter.setAuthenticationSuccessHandler(successHandler());
+//        filter.setAuthenticationFailureHandler(authenticationFailureHandler());
+//        return filter;
+//    }
+
 }

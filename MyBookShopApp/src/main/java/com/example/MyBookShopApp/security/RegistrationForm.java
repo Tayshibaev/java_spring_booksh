@@ -3,7 +3,8 @@ package com.example.MyBookShopApp.security;
 public class RegistrationForm {
 
     private String name;
-    private String email;
+    private String mail;
+
     private String phone;
     private String pass;
 
@@ -15,12 +16,12 @@ public class RegistrationForm {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMail() {
+        return mail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public String getPhone() {

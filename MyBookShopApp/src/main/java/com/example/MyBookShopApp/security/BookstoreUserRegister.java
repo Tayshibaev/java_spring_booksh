@@ -31,10 +31,10 @@ public class BookstoreUserRegister {
 
     public void registerNewUser(RegistrationForm registrationForm) {
 
-        if (bookstoreUserRepository.findBookstoreUserByEmail(registrationForm.getEmail()) == null) {
+        if (bookstoreUserRepository.findBookstoreUserByEmail(registrationForm.getMail()) == null) {
             BookstoreUser user = new BookstoreUser();
             user.setName(registrationForm.getName());
-            user.setEmail(registrationForm.getEmail());
+            user.setEmail(registrationForm.getMail());
             user.setPhone(registrationForm.getPhone());
             user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             bookstoreUserRepository.save(user);

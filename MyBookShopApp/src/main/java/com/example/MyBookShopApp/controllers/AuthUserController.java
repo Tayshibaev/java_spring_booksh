@@ -1,12 +1,13 @@
-package com.example.MyBookShopApp.security;
+package com.example.MyBookShopApp.controllers;
 
+import com.example.MyBookShopApp.security.BookstoreUserRegister;
+import com.example.MyBookShopApp.security.ContactConfirmationPayload;
+import com.example.MyBookShopApp.security.ContactConfirmationResponse;
+import com.example.MyBookShopApp.security.RegistrationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
