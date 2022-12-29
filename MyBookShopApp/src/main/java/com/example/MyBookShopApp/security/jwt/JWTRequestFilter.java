@@ -2,6 +2,9 @@ package com.example.MyBookShopApp.security.jwt;
 
 import com.example.MyBookShopApp.security.BookstoreUserDetails;
 import com.example.MyBookShopApp.security.BookstoreUserDetailsService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,12 +18,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final JWTUtil jwtUtil;
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public JWTRequestFilter(BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil) {
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
@@ -36,25 +41,34 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    token = cookie.getValue();
-                    username = jwtUtil.extractUsername(token);
-                }
-
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    BookstoreUserDetails userDetails;
-                    try {
-                        userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(username);
-                        if (jwtUtil.validateToken(token, userDetails)) {
-                            UsernamePasswordAuthenticationToken authenticationToken =
-                                    new UsernamePasswordAuthenticationToken(
-                                            userDetails, null, userDetails.getAuthorities());
-
-                            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                        }
-                    } catch (UsernameNotFoundException e) {
+                try {
+                    if (cookie.getName().equals("token")) {
+                        token = cookie.getValue();
+                        username = jwtUtil.extractUsername(token);
                     }
+
+                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        BookstoreUserDetails userDetails;
+                        try {
+                            userDetails = (BookstoreUserDetails) bookstoreUserDetailsService.loadUserByUsername(username);
+                            if (jwtUtil.validateToken(token, userDetails)) {
+                                UsernamePasswordAuthenticationToken authenticationToken =
+                                        new UsernamePasswordAuthenticationToken(
+                                                userDetails, null, userDetails.getAuthorities());
+
+                                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                            }
+                        } catch (UsernameNotFoundException e) {
+                            logger.info("Не найден Юзер");
+                        }
+                    }
+                } catch (MalformedJwtException e) {
+                    logger.info("Невалидный токен");
+                } catch (ExpiredJwtException e) {
+                    logger.info("Устаревший токен");
+                } catch (SignatureException e) {
+                    logger.info("Неверная подпись JWT!!!");
                 }
             }
         }

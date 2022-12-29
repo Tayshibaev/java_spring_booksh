@@ -93,22 +93,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
     }
 
-//    @Bean
-//    RestAuthenticationFailureHandler authenticationFailureHandler() {
-//        return new RestAuthenticationFailureHandler();
-//    }
-
-//    private RequestMatcher PROTECTED_URLS = new OrRequestMatcher(
-//            new AntPathRequestMatcher("/**"),new AntPathRequestMatcher("/**")
-//    );
-
-//    @Bean
-//    AuthenticationFilter authenticationFilter() throws Exception {
-//
-//        filter.setAuthenticationManager(authenticationManager());
-//        filter.setAuthenticationSuccessHandler(successHandler());
-//        filter.setAuthenticationFailureHandler(authenticationFailureHandler());
-//        return filter;
-//    }
-
 }

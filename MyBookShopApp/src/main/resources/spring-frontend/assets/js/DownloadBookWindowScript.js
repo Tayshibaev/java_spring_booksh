@@ -1,4 +1,4 @@
-$(document).ready(function () {
+f$(document).ready(function () {
     $('a.btn').click(function (event) {
         event.preventDefault();
         $('#myOverlay').fadeIn(297, function () {
