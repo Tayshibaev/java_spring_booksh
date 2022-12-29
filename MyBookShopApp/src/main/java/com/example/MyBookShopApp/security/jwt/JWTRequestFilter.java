@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.security.jwt;
 
 import com.example.MyBookShopApp.security.BookstoreUserDetails;
 import com.example.MyBookShopApp.security.BookstoreUserDetailsService;
+import com.example.MyBookShopApp.services.TokenBlackListService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -26,10 +27,12 @@ public class JWTRequestFilter extends OncePerRequestFilter {
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final JWTUtil jwtUtil;
     private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final TokenBlackListService tokenBlackListService;
 
-    public JWTRequestFilter(BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil) {
+    public JWTRequestFilter(BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil, TokenBlackListService tokenBlackListService) {
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
         this.jwtUtil = jwtUtil;
+        this.tokenBlackListService = tokenBlackListService;
     }
 
     @Override
@@ -46,7 +49,11 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                         token = cookie.getValue();
                         username = jwtUtil.extractUsername(token);
                     }
-
+                    if(tokenBlackListService.isTokenInBlackList(token)) {
+                        logger.info("TOKEN IS IN BLACKLIST");
+                        continue;
+                    }
+                    logger.info("TOKEN IS NOT IN BLACKLIST");
                     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                         BookstoreUserDetails userDetails;
                         try {

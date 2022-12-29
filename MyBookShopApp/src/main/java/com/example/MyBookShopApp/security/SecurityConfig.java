@@ -74,7 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .loginPage("/signin").failureUrl("/signin")
                 //  .failureHandler(authenticationFailureHandler())
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/signin").deleteCookies("token")
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutBL")
+                //.deleteCookies("token")
 //                .and().oauth2Login()
 //                .and().oauth2Client()
         ;
