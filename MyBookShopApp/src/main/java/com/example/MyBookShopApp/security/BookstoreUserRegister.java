@@ -7,7 +7,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class BookstoreUserRegister {
@@ -17,16 +20,18 @@ public class BookstoreUserRegister {
     private final AuthenticationManager authenticationManager;
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
     private final JWTUtil jwtUtil;
+    private final OAuth2AuthorizedClientService authorizedClientService;
 
     @Autowired
     public BookstoreUserRegister(BookstoreUserRepository bookstoreUserRepository, PasswordEncoder passwordEncoder,
                                  AuthenticationManager authenticationManager,
-                                 BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil) {
+                                 BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil, OAuth2AuthorizedClientService authorizedClientService) {
         this.bookstoreUserRepository = bookstoreUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.bookstoreUserDetailsService = bookstoreUserDetailsService;
         this.jwtUtil = jwtUtil;
+        this.authorizedClientService = authorizedClientService;
     }
 
     public void registerNewUser(RegistrationForm registrationForm) {
@@ -62,6 +67,24 @@ public class BookstoreUserRegister {
         return response;
     }
 
+    public void saveInfoClientFromFacebook(Map<String, String> userAttributes) {
+        String email = userAttributes.get("email");
+        String name = userAttributes.get("name");
+        String password = "";
+        String phone = "";
+        if (bookstoreUserRepository.findBookstoreUserByEmail(email) == null) {
+            BookstoreUser user = new BookstoreUser();
+            user.setName(name);
+            user.setEmail(email);
+            user.setPhone(phone);
+            user.setPassword(passwordEncoder.encode(password));
+            bookstoreUserRepository.save(user);
+        }
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email,
+                ""));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
     public Object getCurrentUser() {
         BookstoreUserDetails userDetails =

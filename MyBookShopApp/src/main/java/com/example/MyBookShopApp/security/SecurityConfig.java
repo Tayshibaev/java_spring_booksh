@@ -65,32 +65,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/my", "/profile")
-                //.authenticated()
-                .hasRole("USER")
+                .authenticated()
+//                .hasRole("USER")
                 .antMatchers("/**").permitAll()
-//                .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(authEntryPoint)
                 .and().formLogin()
                 .loginPage("/signin").failureUrl("/signin")
                 //  .failureHandler(authenticationFailureHandler())
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutBL")
                 //.deleteCookies("token")
-//                .and().oauth2Login()
-//                .and().oauth2Client()
+                .and().oauth2Login().defaultSuccessUrl("/loginSuccess")
+                .and().oauth2Client()
         ;
-//        http = http.exceptionHandling()
-//                .authenticationEntryPoint(
-//                        (request, response, ex) -> {
-//                            response.sendError(
-//                                    HttpServletResponse.SC_UNAUTHORIZED,
-//                                    ex.getMessage()
-//                            );
-//                        }
-//                )
-//                .and();
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
     }
 
