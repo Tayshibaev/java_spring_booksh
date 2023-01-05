@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="commentFragement" th:if="${currUser}!=null">
+        <strong class="Comments-title">Написать отзыв
+        </strong>
+        <div class="Comments-addComment">
+            <form class="form" action="#" method="post" th:attr="data-bookid = ${slugBook.slug}">
+                <div class="form-group">
+                                <textarea class="form-textarea Comments-review" name="review"
+                                          id="review" placeholder="Текст отзыва"
+                                          data-validate="require"></textarea>
+                </div>
+                <div class="form-group Comments-sendReview">
+                    <button class="btn btn_warning" type="submit">Отправить отзыв
+                    </button>
+                </div>
+            </form>
+        </div>
+</div>
+</html>

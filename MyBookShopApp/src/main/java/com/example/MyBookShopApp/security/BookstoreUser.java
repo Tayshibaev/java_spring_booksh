@@ -1,18 +1,35 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.user.UserEntity;
+
 import javax.persistence.*;
 
+
+//Сущность с дополнительной инфой по юзеру для реги по логину и паролю
 @Entity
-@Table(name = "userss")
+@Table(name = "users_contact_add")
 public class BookstoreUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity userId;
+
     private String name;
     private String email;
     private String phone;
     private String password;
+
+    public UserEntity getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UserEntity userId) {
+        this.userId = userId;
+    }
 
     public Integer getId() {
         return id;

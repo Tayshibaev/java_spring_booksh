@@ -34,8 +34,8 @@ public class BooksReviewLikeService {
         this.userRepository = userRepository;
     }
 
-    public BookReviewLikeEntity saveBookReviewLike(BookReviewEntity bookReviewEntity, String value) {
-        Integer userId = ThreadLocalRandom.current().nextInt(1, 21);
+    public BookReviewLikeEntity saveBookReviewLike(BookReviewEntity bookReviewEntity, Integer userId, String value) {
+      //  Integer userId = ThreadLocalRandom.current().nextInt(1, 21);
         BookReviewLikeEntity bookReviewLike = bookReviewRepository.getBookReviewLikeEntityByReviewIdAndUserId(bookReviewEntity, userId);
         if (bookReviewLike == null) {
             bookReviewLike = new BookReviewLikeEntity();

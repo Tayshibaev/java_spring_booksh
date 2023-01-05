@@ -352,7 +352,7 @@ p.error-browser
                                     </div>
                                 </button>
                             </div>
-                            <div class="ProductCard-assessment"><span
+                            <div class="ProductCard-assessment" th:if="${currUser}!=null"><span
                                     class="ProductCard-titleProp">Оцените книгу:</span><span class="Rating Rating_input"
                                                                                              th:attr="data-bookid = ${slugBook.slug}"
                                                                                              data-bookid="2121"><span
@@ -501,21 +501,22 @@ p.error-browser
                     </div>
                 </div>
                 <div class="Comments">
-                    <strong class="Comments-title">Написать отзыв
-                    </strong>
-                    <div class="Comments-addComment">
-                        <form class="form" action="#" method="post" th:attr="data-bookid = ${slugBook.slug}">
-                            <div class="form-group">
-                                <textarea class="form-textarea Comments-review" name="review"
-                                          id="review" placeholder="Текст отзыва"
-                                          data-validate="require"></textarea>
-                            </div>
-                            <div class="form-group Comments-sendReview">
-                                <button class="btn btn_warning" type="submit">Отправить отзыв
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    <div th:replace="~{fragments/comments_fragment :: commentFragement(slugBook=${slugBook}, currUser=${currUser})}"></div>
+<!--                    <strong class="Comments-title">Написать отзыв-->
+<!--                    </strong>-->
+<!--                    <div class="Comments-addComment">-->
+<!--                        <form class="form" action="#" method="post" th:attr="data-bookid = ${slugBook.slug}">-->
+<!--                            <div class="form-group">-->
+<!--                                <textarea class="form-textarea Comments-review" name="review"-->
+<!--                                          id="review" placeholder="Текст отзыва"-->
+<!--                                          data-validate="require"></textarea>-->
+<!--                            </div>-->
+<!--                            <div class="form-group Comments-sendReview">-->
+<!--                                <button class="btn btn_warning" type="submit">Отправить отзыв-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </div>-->
                     <div class="Comment"
                          th:each="bookRating : ${review}">
 
@@ -583,7 +584,7 @@ p.error-browser
                                 </p>
                             </div>
                             <div class="Comment-footer">
-                                <div class="Comment-appeal">
+                                <div class="Comment-appeal" th:if="${currUser}!=null">
                                     <button class="btn btn_white btn_like"
                                             th:attr="data-likeid = ${bookRating.getKey().getId()}"
                                             data-btntype="check" data-check="false"

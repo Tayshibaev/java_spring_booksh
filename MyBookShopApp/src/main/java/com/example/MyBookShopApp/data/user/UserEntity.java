@@ -3,12 +3,15 @@ package com.example.MyBookShopApp.data.user;
 import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
 import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
+import com.example.MyBookShopApp.security.BookstoreUser;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+
+//Основной класс по юзеру
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -34,6 +37,17 @@ public class UserEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private BookReviewEntity bookRatingStars;
+
+    @OneToOne(mappedBy = "userId", cascade = CascadeType.ALL)
+    private BookstoreUser userInfoAdditional;
+
+    public BookstoreUser getUserInfoAdditional() {
+        return userInfoAdditional;
+    }
+
+    public void setUserInfoAdditional(BookstoreUser userInfoAdditional) {
+        this.userInfoAdditional = userInfoAdditional;
+    }
 
     public int getId() {
         return id;

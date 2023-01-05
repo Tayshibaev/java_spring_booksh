@@ -35,8 +35,8 @@ public class BooksRatingStarsService {
         return bookStr.orElseGet(() -> new BookRatingStars(id));
     }
 
-    public void saveBook2Rating(Book book, String value) {
-        Integer userId = ThreadLocalRandom.current().nextInt(1, 20);
+    public void saveBook2Rating(Book book, Integer userId, String value) {
+//        Integer userId = ThreadLocalRandom.current().nextInt(1, 20);
 
         Book2RatingEntity book2Rating = book2RatingStarsRepository.getBook2RatingEntityByBookIdAndUserId(book, userId);
         if (book2Rating == null) {

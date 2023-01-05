@@ -6,6 +6,8 @@ import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.TagEntity;
 import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
 import com.example.MyBookShopApp.data.genre.GenreEntity;
+import com.example.MyBookShopApp.security.BookstoreUser;
+import com.example.MyBookShopApp.security.BookstoreUserRegister;
 import com.example.MyBookShopApp.services.*;
 import com.example.MyBookShopApp.DTO.BooksPageDto;
 import com.example.MyBookShopApp.DTO.SearchWordDto;
@@ -18,7 +20,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class MainPageController {
@@ -26,6 +27,7 @@ public class MainPageController {
     private final BookService bookService;
     private final BooksRatingAndPopulatityService bookPopularService;
     private final BookAndTagsService bookAndTagsService;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
     private GenreAndBookService genreService;
@@ -33,11 +35,12 @@ public class MainPageController {
     @Autowired
     public MainPageController(BookService bookService
             , BooksRatingAndPopulatityService bookPopularService
-            , BookAndTagsService bookAndTagsService
-    ) {
+            , BookAndTagsService bookAndTagsService,
+                              BookstoreUserRegister userRegister) {
         this.bookService = bookService;
         this.bookPopularService = bookPopularService;
         this.bookAndTagsService = bookAndTagsService;
+        this.userRegister = userRegister;
     }
 
     @ModelAttribute("recommendedBooks")
@@ -226,27 +229,32 @@ public class MainPageController {
     @Autowired
     private BooksReviewLikeService booksReviewLikeService;
 
-    @PostMapping(path = "/bookReview", consumes = "application/x-www-form-urlencoded")
+    @PostMapping(path = "/bookReview"
+            , consumes = {"application/json"}
+    )
     public String saveCommentBook(
-            //@RequestBody
-            BookReviewDto bookRevDto) {
-        System.out.println(bookRevDto);
+            @RequestBody
+                    BookReviewDto bookRevDto) {
+        System.out.println("BookDto" + bookRevDto);
         String bookId = bookRevDto.getBookId();
         Book book = bookService.getBookBySlug(bookId);
+        System.out.println("Book" + book);
         String text = bookRevDto.getText();
-        booksReviewService.saveBookReview(book.getId(), text);
+        BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
+        booksReviewService.saveBookReview(book.getId(), user.getUserId().getId(), text);
         return "redirect:/books/" + bookId;
     }
 
     @PostMapping(path = "/rateBookReview"
-            , consumes = "application/x-www-form-urlencoded"
+            , consumes = {"application/json"}
     )
-    public String saveLikeBook(BookReviewLikeDto bookRevDto) {
+    public String saveLikeBook(@RequestBody BookReviewLikeDto bookRevDto) {
         System.out.println(bookRevDto);
         String like = bookRevDto.getValue();
         String reviewId = bookRevDto.getReviewid();
         BookReviewEntity bookReview = booksReviewService.getBookReviewByReviewId(Integer.parseInt(reviewId));
-        booksReviewLikeService.saveBookReviewLike(bookReview, like);
+        BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
+        booksReviewLikeService.saveBookReviewLike(bookReview, user.getUserId().getId(), like);
         Book book = bookService.getBookById(bookReview.getBookId());
         return "redirect:/books/" + book.getSlug()
                 //+ bookId

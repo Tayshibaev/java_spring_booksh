@@ -7,6 +7,8 @@ import com.example.MyBookShopApp.data.ResourceStorage;
 import com.example.MyBookShopApp.data.book.links.Book2RatingEntity;
 import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
 import com.example.MyBookShopApp.repositories.BookRepository;
+import com.example.MyBookShopApp.security.BookstoreUser;
+import com.example.MyBookShopApp.security.BookstoreUserRegister;
 import com.example.MyBookShopApp.services.BooksRatingStarsService;
 import com.example.MyBookShopApp.services.BooksReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ public class BooksController {
 
     private final BookRepository bookRepository;
     private final ResourceStorage storage;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
     private BooksRatingStarsService booksRatingStarsService;
@@ -43,9 +46,10 @@ public class BooksController {
     }
 
     @Autowired
-    public BooksController(BookRepository bookRepository, ResourceStorage storage) {
+    public BooksController(BookRepository bookRepository, ResourceStorage storage, BookstoreUserRegister userRegister) {
         this.bookRepository = bookRepository;
         this.storage = storage;
+        this.userRegister = userRegister;
     }
 
     @GetMapping("/{slug}")
@@ -57,6 +61,14 @@ public class BooksController {
         model.addAttribute("slugBook", book);
         model.addAttribute("stars", stars);
         model.addAttribute("review", reviewAndRating);
+        try {
+            BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
+            model.addAttribute("currUser", user);
+            System.out.println("currUser=" + user);
+        } catch (Exception e) {
+            model.addAttribute("currUser", null);
+            System.out.println("currUser is NULL");
+        }
         return "/books/slug";
     }
 
@@ -64,7 +76,8 @@ public class BooksController {
     public String addStarsRating(@PathVariable("slug") String slug, @PathVariable("value") String value, Model model) {
         Book book = bookRepository.findBookBySlug(slug);
         System.out.println("SLUG AND VALUE: " + slug + "  " + value);
-        booksRatingStarsService.saveBook2Rating(book, value);
+        BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
+        booksRatingStarsService.saveBook2Rating(book, user.getUserId().getId(), value);
         return "redirect:/books/" + slug;
     }
 
