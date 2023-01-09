@@ -40,7 +40,7 @@ public class BookstoreUserRegister {
         this.userRepository = userRepository;
     }
 
-    public void registerNewUser(RegistrationForm registrationForm) {
+    public BookstoreUser registerNewUser(RegistrationForm registrationForm) {
 
         if (bookstoreUserRepository.findBookstoreUserByEmail(registrationForm.getMail()) == null) {
             BookstoreUser user = new BookstoreUser();
@@ -60,9 +60,12 @@ public class BookstoreUserRegister {
             user.setUserId(userMain);
             userMain.setUserInfoAdditional(user);
 
+//            userRepository.save(userMain);
             bookstoreUserRepository.save(user);
-            //userRepository.save(userMain);
+            return user;
+            //
         }
+        return null;
     }
 
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
