@@ -48,7 +48,7 @@ public class BookstoreUserRegister {
             userMain.setBalance(ThreadLocalRandom.current().nextInt(0, 1000));
             userMain.setName(registrationForm.getName());
             userMain.setRegTime(new Date());
-            userMain.setHash(registrationForm.getName().replaceAll(" ","").toLowerCase()
+            userMain.setHash(registrationForm.getName().replaceAll(" ", "").toLowerCase()
                     + "_" + ThreadLocalRandom.current().nextInt(0, 100));
 
 
@@ -100,7 +100,7 @@ public class BookstoreUserRegister {
             userMain.setBalance(ThreadLocalRandom.current().nextInt(0, 1000));
             userMain.setName(name);
             userMain.setRegTime(new Date());
-            userMain.setHash(name.replaceAll(" ","").toLowerCase()
+            userMain.setHash(name.replaceAll(" ", "").toLowerCase()
                     + "_" + ThreadLocalRandom.current().nextInt(0, 100));
 
             user.setName(name);
@@ -112,7 +112,7 @@ public class BookstoreUserRegister {
             userMain.setUserInfoAdditional(user);
 
             bookstoreUserRepository.save(user);
-           // userRepository.save(userMain);
+            // userRepository.save(userMain);
         }
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email,

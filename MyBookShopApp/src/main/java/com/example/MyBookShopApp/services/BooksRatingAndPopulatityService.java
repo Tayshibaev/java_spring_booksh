@@ -30,7 +30,6 @@ public class BooksRatingAndPopulatityService {
     //Получить книги по рейтингу
     public List<Book> getRatingPopularBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        bookRepository.findBooksRatingDesc(nextPage).forEach(System.out::println);
         return bookRepository.findBooksRatingDesc(nextPage).getContent()
                 .stream().map(BookPopular::getBook).collect(Collectors.toList());
     }

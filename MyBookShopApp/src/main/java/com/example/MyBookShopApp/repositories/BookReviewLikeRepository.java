@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface BookReviewLikeRepository extends JpaRepository<BookReviewLikeEntity, Integer> {
     BookReviewLikeEntity getBookReviewLikeEntityByReviewIdAndUserId(BookReviewEntity bookReview, Integer userId);
+    List<BookReviewLikeEntity> getBookReviewLikeEntityByReviewId(BookReviewEntity bookReview);
 }

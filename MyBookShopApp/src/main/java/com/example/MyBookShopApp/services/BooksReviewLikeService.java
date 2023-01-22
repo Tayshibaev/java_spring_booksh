@@ -48,5 +48,16 @@ public class BooksReviewLikeService {
         return bookReviewRepository.save(bookReviewLike);
     }
 
+    //Расчет рейтинга отзыва книги
+    public long getRatingReview(BookReviewEntity bookReviewEntity) {
+        List<BookReviewLikeEntity> bookReviewLikeEntities = bookReviewRepository.getBookReviewLikeEntityByReviewId(bookReviewEntity);
+        if(bookReviewLikeEntities.isEmpty()) {
+            return 0;
+        }
+        long likesCount = bookReviewLikeEntities.stream().filter(x->x.getValue()>0).count();
+        long dislikesCount = bookReviewLikeEntities.stream().filter(x->x.getValue()<0).count();
+        return likesCount - dislikesCount;
+    }
+
 
 }

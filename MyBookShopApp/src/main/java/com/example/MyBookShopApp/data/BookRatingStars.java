@@ -15,13 +15,15 @@ public class BookRatingStars {
     @Id
     @Column(name = "book_id")
     private Integer bookId;//id книги
-    private Integer one=0;//отложена
-    private Integer two=0;//в корзине
-    private Integer three=0;//куплена
-    private Integer four=0;//в архиве
-    private Integer five=0;//в архиве
+    private Integer one=0;//1 звезда
+    private Integer two=0;//2 звезды
+    private Integer three=0;//3 звезды
+    private Integer four=0;//4 звезды
+    private Integer five=0;//5 звезд
 
+    //рейтинг книги
     public Integer getRatingRange() {
+        if((one+two+three+four+five)==0) return 0;
         return Math.round((float) (one+2*two+3*three+4*four+5*five)/(float) ((one+two+three+four+five)));
     }
 

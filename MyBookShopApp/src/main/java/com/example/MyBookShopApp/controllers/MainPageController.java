@@ -45,7 +45,7 @@ public class MainPageController {
 
     @ModelAttribute("recommendedBooks")
     public List<Book> recommendedBooks() {
-        return bookService.getPageOfRecommendedBooks(0, 6).getContent();
+        return bookService.getPageOfRecommendedBooks(0, 6);
     }
 
     @ModelAttribute("recentBooks")
@@ -176,7 +176,7 @@ public class MainPageController {
     @ResponseBody
     public BooksPageDto getBooksPage(@RequestParam("offset") Integer offset,
                                      @RequestParam("limit") Integer limit) {
-        return new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit).getContent());
+        return new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit));
     }
 
     @GetMapping("/books/tag/{id}")

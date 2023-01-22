@@ -1,7 +1,9 @@
 package com.example.MyBookShopApp.services;
 
 import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.repositories.BookRatingRepository;
+import com.example.MyBookShopApp.repositories.BookRatingStarsRepository;
 import com.example.MyBookShopApp.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,9 @@ public class BookService {
 
     @Autowired
     private BookRatingRepository bookRepositoryR;
+
+    @Autowired
+    private BookRatingStarsRepository bookRatingStarsRepository;
 
     @Autowired
     public BookService(BookRepository bookRepository) {
@@ -62,9 +67,10 @@ public class BookService {
         return bookRepository.getBestsellers();
     }
 
-    public Page<Book> getPageOfRecommendedBooks(Integer offset, Integer limit) {
+    public List<Book> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
-        return bookRepository.findAll(nextPage);
+        return  bookRatingStarsRepository.findBooksRatingDesc(nextPage).getContent()
+                .stream().map(BookRatingStars::getBook).collect(Collectors.toList());
     }
 
     public Page<Book> getPageOfRecentBooks(Integer offset, Integer limit) {

@@ -1,21 +1,14 @@
 package com.example.MyBookShopApp.services;
 
 import com.example.MyBookShopApp.data.Book;
-import com.example.MyBookShopApp.data.BookPopular;
 import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.book.links.Book2RatingEntity;
 import com.example.MyBookShopApp.repositories.Book2RatingStarsRepository;
-import com.example.MyBookShopApp.repositories.BookRatingRepository;
 import com.example.MyBookShopApp.repositories.BookRatingStarsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Service
 public class BooksRatingStarsService {
@@ -31,7 +24,7 @@ public class BooksRatingStarsService {
 
     //Получить книги по рейтингу
     public BookRatingStars getRatingPopularBooks(Integer id) {
-        Optional<BookRatingStars> bookStr = bookRepository.findBooksRatingDesc(id);
+        Optional<BookRatingStars> bookStr = bookRepository.findBookRatingByBookId(id);
         return bookStr.orElseGet(() -> new BookRatingStars(id));
     }
 
