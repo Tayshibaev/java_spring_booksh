@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.DTO.BookReviewDto;
 import com.example.MyBookShopApp.DTO.BookReviewLikeDto;
+import com.example.MyBookShopApp.annotation.DurationTrackable;
 import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.TagEntity;
 import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
@@ -103,26 +104,31 @@ public class MainPageController {
         return new ArrayList<>();
     }
 
+    @DurationTrackable
     @GetMapping("/")
     public String mainPage() {
         return "index";
     }
 
+    @DurationTrackable
     @GetMapping("/recent")
     public String recentPage() {
         return "books/recent";
     }
 
+    @DurationTrackable
     @GetMapping("/popular")
     public String popularPage() {
         return "books/popular";
     }
 
+    @DurationTrackable
     @GetMapping("/genres")
     public String genresPage() {
         return "genres/index";
     }
 
+    @DurationTrackable
     @GetMapping("/tagPage/{tagName}")
     public String tagsPage(@PathVariable(value = "tagName") String id, Model model) {
         TagEntity tag = bookAndTagsService.getTagByName(id);
@@ -132,6 +138,7 @@ public class MainPageController {
         return "tags/index";
     }
 
+    @DurationTrackable
     @GetMapping("/genres/{slug}")
     public String genresSlugPage(@PathVariable("slug") String slug, Model model) {
         GenreEntity genre = genreService.genreEntityBySlug(slug);
@@ -161,6 +168,7 @@ public class MainPageController {
 //        return new BooksPageDto(bookService.getPageOfRecentBooks(offset, limit).getContent());
 //    }
 
+    @DurationTrackable
     @GetMapping("/books/recent")
     @ResponseBody
     public BooksPageDto getFromToDateRecentBooksPage(@RequestParam(value = "from", required = false) String from,
@@ -172,6 +180,7 @@ public class MainPageController {
                 offset, limit).getContent());
     }
 
+    @DurationTrackable
     @GetMapping("/books/recommended")
     @ResponseBody
     public BooksPageDto getBooksPage(@RequestParam("offset") Integer offset,
@@ -179,6 +188,7 @@ public class MainPageController {
         return new BooksPageDto(bookService.getPageOfRecommendedBooks(offset, limit));
     }
 
+    @DurationTrackable
     @GetMapping("/books/tag/{id}")
     @ResponseBody
     public BooksPageDto tagsPage(@RequestParam("offset") Integer offset,
@@ -189,6 +199,7 @@ public class MainPageController {
         return new BooksPageDto(booksByTag);
     }
 
+    @DurationTrackable
     @GetMapping("/books/genre/{id}")
     @ResponseBody
     public BooksPageDto genreElsePage(@RequestParam("offset") Integer offset,
@@ -199,7 +210,7 @@ public class MainPageController {
         return new BooksPageDto(booksByTag);
     }
 
-
+    @DurationTrackable
     @GetMapping("/books/popular")
     @ResponseBody
     public BooksPageDto getPopularBooksPage(@RequestParam("offset") Integer offset,
@@ -207,6 +218,7 @@ public class MainPageController {
         return new BooksPageDto(bookPopularService.getRatingPopularBooks(offset, limit));
     }
 
+    @DurationTrackable
     @GetMapping(value = {"/search", "/search/{searchWord}"})
     public String getSearchResults(@PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto,
                                    Model model) {
@@ -216,6 +228,7 @@ public class MainPageController {
         return "/search/index";
     }
 
+    @DurationTrackable
     @GetMapping("/search/page/{searchWord}")
     @ResponseBody
     public BooksPageDto getNextSearchPage(@RequestParam("offset") Integer offset,
@@ -229,6 +242,7 @@ public class MainPageController {
     @Autowired
     private BooksReviewLikeService booksReviewLikeService;
 
+    @DurationTrackable
     @PostMapping(path = "/bookReview"
             , consumes = {"application/json"}
     )
@@ -245,6 +259,7 @@ public class MainPageController {
         return "redirect:/books/" + bookId;
     }
 
+    @DurationTrackable
     @PostMapping(path = "/rateBookReview"
             , consumes = {"application/json"}
     )

@@ -2,6 +2,7 @@ package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.DTO.BooksPageDto;
 import com.example.MyBookShopApp.DTO.SearchWordDto;
+import com.example.MyBookShopApp.annotation.DurationTrackable;
 import com.example.MyBookShopApp.data.Author;
 import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.TagEntity;
@@ -43,6 +44,7 @@ public class AuthorsController {
         return authorService.getAuthorsMap();
     }
 
+    @DurationTrackable
     @GetMapping("/authors")
     public String authorsPage() {
         return "authors/index";

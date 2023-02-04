@@ -1,6 +1,7 @@
 package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.DTO.SearchWordDto;
+import com.example.MyBookShopApp.annotation.DurationTrackable;
 import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.ResourceStorage;
@@ -52,6 +53,7 @@ public class BooksController {
         this.userRegister = userRegister;
     }
 
+    @DurationTrackable
     @GetMapping("/{slug}")
     public String bookPage(@PathVariable("slug") String slug, Model model) {
         Book book = bookRepository.findBookBySlug(slug);

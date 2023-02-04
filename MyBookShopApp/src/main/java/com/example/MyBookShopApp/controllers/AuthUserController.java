@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.controllers;
 
+import com.example.MyBookShopApp.annotation.DurationTrackable;
 import com.example.MyBookShopApp.security.BookstoreUserRegister;
 import com.example.MyBookShopApp.security.ContactConfirmationPayload;
 import com.example.MyBookShopApp.security.ContactConfirmationResponse;
@@ -38,11 +39,13 @@ public class AuthUserController {
         this.tokenBlackListService = tokenBlackListService;
     }
 
+    @DurationTrackable
     @GetMapping("/signin")
     public String handleSignIn() {
         return "signin";
     }
 
+    @DurationTrackable
     @GetMapping("/signup")
     public String handleSignUp(Model model) {
         model.addAttribute("regForm", new RegistrationForm());

@@ -1,6 +1,7 @@
 package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.DTO.SearchWordDto;
+import com.example.MyBookShopApp.annotation.DurationTrackable;
 import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class BookshpCartController {
         this.bookRepository = bookRepository;
     }
 
+    @DurationTrackable
     @GetMapping("/cart")
     public String handleCartRequest(@CookieValue(value = "cartContents", required = false) String cartContents,
                                     Model model) {
@@ -53,6 +55,7 @@ public class BookshpCartController {
         return "cart";
     }
 
+    @DurationTrackable
     @GetMapping("/postponed")
     public String handlePostponedRequest(@CookieValue(value = "keptContents", required = false) String cartContents,
                                          Model model) {
