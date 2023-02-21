@@ -47,9 +47,12 @@ public class AspectForLogginRequestsInDb {
                 .filter(event -> event.getMessage().startsWith("select"))
                 .map(ILoggingEvent::getMessage)
                 .collect(Collectors.toList());
-        String sqlQuery = sqlStatements.get(0);
-        logger.info("SQL запрос: " + sqlQuery);
+        try {
+            String sqlQuery = sqlStatements.get(0);
+            logger.info("SQL запрос: " + sqlQuery);
+        } catch (Exception e) {
 
+        }
         return returnValue;
     }
 }

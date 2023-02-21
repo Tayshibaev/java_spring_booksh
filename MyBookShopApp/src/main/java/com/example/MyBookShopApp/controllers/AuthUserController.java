@@ -1,10 +1,12 @@
 package com.example.MyBookShopApp.controllers;
 
 import com.example.MyBookShopApp.annotation.DurationTrackable;
+import com.example.MyBookShopApp.data.SmsCode;
 import com.example.MyBookShopApp.security.BookstoreUserRegister;
 import com.example.MyBookShopApp.security.ContactConfirmationPayload;
 import com.example.MyBookShopApp.security.ContactConfirmationResponse;
 import com.example.MyBookShopApp.security.RegistrationForm;
+import com.example.MyBookShopApp.services.SmsService;
 import com.example.MyBookShopApp.services.TokenBlackListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -32,11 +34,13 @@ public class AuthUserController {
 
     private final BookstoreUserRegister userRegister;
     private final TokenBlackListService tokenBlackListService;
+    private final SmsService smsService;
 
     @Autowired
-    public AuthUserController(BookstoreUserRegister userRegister, TokenBlackListService tokenBlackListService) {
+    public AuthUserController(BookstoreUserRegister userRegister, TokenBlackListService tokenBlackListService, SmsService smsService) {
         this.userRegister = userRegister;
         this.tokenBlackListService = tokenBlackListService;
+        this.smsService = smsService;
     }
 
     @DurationTrackable
@@ -57,15 +61,31 @@ public class AuthUserController {
     public ContactConfirmationResponse handleRequestContactConfirmation(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         response.setResult("true");
-        return response;
+
+        if(payload.getContact().contains("@")) {
+            return response;
+        } else {
+            String smsCodeString = smsService.sendSecretCodeSms(payload.getContact());
+            smsService.saveNewCode(new SmsCode(smsCodeString, 60));
+            return response;
+        }
     }
 
     @PostMapping("/approveContact")
     @ResponseBody
     public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        response.setResult("true");
-        return response;
+        if(smsService.verifyCode(payload.getCode())) {
+            response.setResult("true");
+            return response;
+        } else {
+            if(payload.getContact().contains("@")) {
+                response.setResult("true");
+                return response;
+            } else {
+                return new ContactConfirmationResponse();
+            }
+        }
     }
 
     @PostMapping("/reg")
@@ -83,6 +103,20 @@ public class AuthUserController {
         Cookie cookie = new Cookie("token", loginResponse.getResult());
         httpServletResponse.addCookie(cookie);
         return loginResponse;
+    }
+
+    @PostMapping("/login-by-phone-number")
+    @ResponseBody
+    public ContactConfirmationResponse handleLoginByPhoneNumber(@RequestBody ContactConfirmationPayload payload,
+                                                   HttpServletResponse httpServletResponse) {
+        if(smsService.verifyCode(payload.getCode())) {
+            ContactConfirmationResponse loginResponse = userRegister.jwtLoginByPhoneNumber(payload);
+            Cookie cookie = new Cookie("token", loginResponse.getResult());
+            httpServletResponse.addCookie(cookie);
+            return loginResponse;
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("/my")

@@ -100,7 +100,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>8.6.1</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>
