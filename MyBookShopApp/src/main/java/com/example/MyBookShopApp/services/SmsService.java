@@ -42,7 +42,7 @@ public class SmsService {
         return generateCode;
     }
 
-    private String generateCode() {
+    public String generateCode() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         while (sb.length() < 6) {

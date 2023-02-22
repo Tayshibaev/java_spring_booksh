@@ -9,10 +9,13 @@ import com.example.MyBookShopApp.security.RegistrationForm;
 import com.example.MyBookShopApp.services.SmsService;
 import com.example.MyBookShopApp.services.TokenBlackListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -35,12 +38,14 @@ public class AuthUserController {
     private final BookstoreUserRegister userRegister;
     private final TokenBlackListService tokenBlackListService;
     private final SmsService smsService;
+    private final JavaMailSender javaMailSender;
 
     @Autowired
-    public AuthUserController(BookstoreUserRegister userRegister, TokenBlackListService tokenBlackListService, SmsService smsService) {
+    public AuthUserController(BookstoreUserRegister userRegister, TokenBlackListService tokenBlackListService, SmsService smsService, JavaMailSender javaMailSender) {
         this.userRegister = userRegister;
         this.tokenBlackListService = tokenBlackListService;
         this.smsService = smsService;
+        this.javaMailSender = javaMailSender;
     }
 
     @DurationTrackable
@@ -62,7 +67,7 @@ public class AuthUserController {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         response.setResult("true");
 
-        if(payload.getContact().contains("@")) {
+        if (payload.getContact().contains("@")) {
             return response;
         } else {
             String smsCodeString = smsService.sendSecretCodeSms(payload.getContact());
@@ -71,21 +76,33 @@ public class AuthUserController {
         }
     }
 
+    @Value("${appEmail.email}")
+    private String email;
+
+    @PostMapping("/requestEmailConfirmation")
+    @ResponseBody
+    public ContactConfirmationResponse handleRequestEmailConfirmation(@RequestBody ContactConfirmationPayload payload) {
+        ContactConfirmationResponse response = new ContactConfirmationResponse();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("testforskillbox@mail.ru");
+        message.setTo(payload.getContact());
+        SmsCode smsCode = new SmsCode(smsService.generateCode(), 300);
+        smsService.saveNewCode(smsCode);
+        message.setSubject("Bookstore email verification");
+        message.setText("Verification code is: " + smsCode.getCode());
+        javaMailSender.send(message);
+        response.setResult("true");
+        return response;
+    }
+
     @PostMapping("/approveContact")
     @ResponseBody
     public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        if(smsService.verifyCode(payload.getCode())) {
+        if (smsService.verifyCode(payload.getCode())) {
             response.setResult("true");
-            return response;
-        } else {
-            if(payload.getContact().contains("@")) {
-                response.setResult("true");
-                return response;
-            } else {
-                return new ContactConfirmationResponse();
-            }
         }
+        return response;
     }
 
     @PostMapping("/reg")
@@ -108,8 +125,8 @@ public class AuthUserController {
     @PostMapping("/login-by-phone-number")
     @ResponseBody
     public ContactConfirmationResponse handleLoginByPhoneNumber(@RequestBody ContactConfirmationPayload payload,
-                                                   HttpServletResponse httpServletResponse) {
-        if(smsService.verifyCode(payload.getCode())) {
+                                                                HttpServletResponse httpServletResponse) {
+        if (smsService.verifyCode(payload.getCode())) {
             ContactConfirmationResponse loginResponse = userRegister.jwtLoginByPhoneNumber(payload);
             Cookie cookie = new Cookie("token", loginResponse.getResult());
             httpServletResponse.addCookie(cookie);
