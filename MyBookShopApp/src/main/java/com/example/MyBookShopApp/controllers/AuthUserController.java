@@ -141,12 +141,6 @@ public class AuthUserController {
         return "my";
     }
 
-    @GetMapping("/profile")
-    public String handleProfile(Model model) {
-        model.addAttribute("curUsr", userRegister.getCurrentUser());
-        return "profile";
-    }
-
     @GetMapping("/logoutBL")
     public String handleLogout(HttpServletRequest request) {
 

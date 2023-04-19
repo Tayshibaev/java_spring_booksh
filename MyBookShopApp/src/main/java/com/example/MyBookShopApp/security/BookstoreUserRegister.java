@@ -76,6 +76,18 @@ public class BookstoreUserRegister {
 //        return null;
     }
 
+    public BookstoreUser changeDataClient(RegistrationForm registrationForm) {
+        String name = registrationForm.getName() == null ? "" : registrationForm.getName();
+        BookstoreUser user = (BookstoreUser) getCurrentUser();
+
+        user.setEmail(registrationForm.getMail());
+        user.setPhone(registrationForm.getPhone());
+        user.setName(name);
+        user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
+        bookstoreUserRepository.save(user);
+        return user;
+    }
+
     public ContactConfirmationResponse login(ContactConfirmationPayload payload) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),

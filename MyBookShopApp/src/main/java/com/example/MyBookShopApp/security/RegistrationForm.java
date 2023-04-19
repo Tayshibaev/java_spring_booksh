@@ -8,6 +8,16 @@ public class RegistrationForm {
     private String phone;
     private String pass;
 
+    private String passApprove;
+
+    public String getPassApprove() {
+        return passApprove;
+    }
+
+    public void setPassApprove(String passApprove) {
+        this.passApprove = passApprove;
+    }
+
     public String getName() {
         return name;
     }
@@ -38,5 +48,16 @@ public class RegistrationForm {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    @Override
+    public String toString() {
+        return "RegistrationForm{" +
+                "name='" + name + '\'' +
+                ", mail='" + mail + '\'' +
+                ", phone='" + phone + '\'' +
+                ", pass='" + pass + '\'' +
+                ", passApprove='" + passApprove + '\'' +
+                '}';
     }
 }

@@ -224,8 +224,8 @@ public class MainPageController {
                                    Model model) {
         model.addAttribute("searchWordDto", searchWordDto);
         model.addAttribute("searchResults",
-//                bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), 0, 5).getContent()
-                bookService.getPageOfGoogleBooksApiSearchResult(searchWordDto.getExample(), 0, 5)
+                bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), 0, 5).getContent()
+//                bookService.getPageOfGoogleBooksApiSearchResult(searchWordDto.getExample(), 0, 5)
         );
         return "/search/index";
     }
@@ -237,8 +237,8 @@ public class MainPageController {
                                           @RequestParam("limit") Integer limit,
                                           @PathVariable(value = "searchWord", required = false) SearchWordDto searchWordDto) {
         return
-                //new BooksPageDto(bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), offset, limit).getContent())
-                new BooksPageDto(bookService.getPageOfGoogleBooksApiSearchResult(searchWordDto.getExample(), offset, limit))
+                new BooksPageDto(bookService.getPageOfSearchResultBooks(searchWordDto.getExample(), offset, limit).getContent())
+//                new BooksPageDto(bookService.getPageOfGoogleBooksApiSearchResult(searchWordDto.getExample(), offset, limit))
                 ;
     }
 

@@ -114,19 +114,23 @@ p.error-browser
                 <div class="Tabs-wrap">
                     <div class="Tabs-block" id="basic">
                         <div class="Profile">
-                            <form class="form Profile-form" action="#" method="post">
+                            <form class="form Profile-form" th:object="${regForm}" th:action="@{/profile/saveData}"
+                                  action="#" method="post">
                                 <div class="row">
                                     <div class="row-block">
                                         <div class="form-group">
                                             <label class="form-label" for="name">Имя
                                             </label>
-                                            <input class="form-input" id="name" name="name" type="text" th:value="${curUsr.name}"
+                                            <input class="form-input" id="name" name="name" type="text"
+                                                   th:field="*{name}"
                                                    value="Михаил"/>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="mail">E-mail
                                             </label>
-                                            <input class="form-input" id="mail" name="mail" type="text" th:value="${curUsr.email}"
+                                            <input class="form-input" id="mail" name="mail" type="text"
+
+                                                   th:field="*{mail}"
                                                    value="addr@sait.com"
                                                    data-validate="require mail"/>
                                             <div class="Profile-btn Profile-btn_confirm">
@@ -137,7 +141,9 @@ p.error-browser
                                         <div class="form-group">
                                             <label class="form-label" for="phone">Телефон
                                             </label>
-                                            <input class="form-input" id="phone" name="phone" type="text" th:value="${curUsr.phone}"
+                                            <input class="form-input" id="phone" name="phone" type="text"
+
+                                                   th:field="*{phone}"
                                                    value="+70000000000"
                                                    data-mask="+7 (999) 999-99-99" data-validate="require"/>
                                             <div class="Profile-btn Profile-btn_confirm">
@@ -150,12 +156,15 @@ p.error-browser
                                         <div class="form-group">
                                             <label class="form-label" for="password">Пароль
                                             </label>
-                                            <input class="form-input" id="password" name="password" type="password" placeholder="Тут можно изменить пароль"/>
+                                            <input class="form-input" id="password" name="password" type="password"
+                                                   th:field="*{pass}"
+                                                   placeholder="Тут можно изменить пароль"/>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="passwordReply">Подтверждение пароля
                                             </label>
-                                            <input class="form-input" id="passwordReply" name="passwordReply" type="password" placeholder="Введите пароль повторно"/>
+                                            <input class="form-input" id="passwordReply" name="passwordReply"
+                                                   th:field="*{passApprove}" type="password" placeholder="Введите пароль повторно"/>
                                         </div>
                                         <div class="form-group">
                                             <div class="Profile-btn">
@@ -164,8 +173,10 @@ p.error-browser
                                                 <button class="btn btn_primary" type="submit">Сохранить
                                                 </button>
                                             </div>
-                                            <div class="Profile-success">Профиль успешно сохранен
+                                            <div class="Profile-success" th:if="${changeOk}">Профиль успешно сохранен
                                             </div>
+                                            <div class="form-error" th:if="${pswNotApr}">Пароли не совпадают</div>
+                                            <div class="form-error" th:if="${pswIsNull}">Пароль не должен быть пустым</div>
                                         </div>
                                     </div>
                                 </div>
