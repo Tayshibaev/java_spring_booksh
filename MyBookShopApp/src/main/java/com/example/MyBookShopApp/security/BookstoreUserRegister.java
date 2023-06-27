@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class BookstoreUserRegister {
 
-    private final BookstoreUserRepository bookstoreUserRepository;
+    private final UserRepository bookstoreUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
@@ -29,7 +29,7 @@ public class BookstoreUserRegister {
     private final UserRepository userRepository;
 
     @Autowired
-    public BookstoreUserRegister(BookstoreUserRepository bookstoreUserRepository, PasswordEncoder passwordEncoder,
+    public BookstoreUserRegister(UserRepository bookstoreUserRepository, PasswordEncoder passwordEncoder,
                                  AuthenticationManager authenticationManager,
                                  BookstoreUserDetailsService bookstoreUserDetailsService, JWTUtil jwtUtil, OAuth2AuthorizedClientService authorizedClientService, UserRepository userRepository) {
         this.bookstoreUserRepository = bookstoreUserRepository;
@@ -41,13 +41,12 @@ public class BookstoreUserRegister {
         this.userRepository = userRepository;
     }
 
-    public BookstoreUser registerNewUser(RegistrationForm registrationForm) {
+    public UserEntity registerNewUser(RegistrationForm registrationForm) {
 
-        BookstoreUser byEmail = bookstoreUserRepository.findBookstoreUserByEmail(registrationForm.getMail());
-        BookstoreUser byPhone = bookstoreUserRepository.findBookstoreUserByPhone(registrationForm.getPhone());
+        UserEntity byEmail = bookstoreUserRepository.findBookstoreUserByEmail(registrationForm.getMail());
+        UserEntity byPhone = bookstoreUserRepository.findBookstoreUserByPhone(registrationForm.getPhone());
 
         if (byEmail == null && byPhone == null) {
-            BookstoreUser user = new BookstoreUser();
             UserEntity userMain = new UserEntity();
             String name = registrationForm.getName() == null ? "" : registrationForm.getName();
             userMain.setBalance(ThreadLocalRandom.current().nextInt(0, 1000));
@@ -58,17 +57,14 @@ public class BookstoreUserRegister {
                     + "_" + ThreadLocalRandom.current().nextInt(0, 100));
 
 
-            user.setName(name);
-            user.setEmail(registrationForm.getMail());
-            user.setPhone(registrationForm.getPhone());
-            user.setPassword(passwordEncoder.encode(registrationForm.getPass()));
+            userMain.setEmail(registrationForm.getMail());
+            userMain.setPhone(registrationForm.getPhone());
+            userMain.setPassword(passwordEncoder.encode(registrationForm.getPass()));
 
-            user.setUserId(userMain);
-            userMain.setUserInfoAdditional(user);
 
 //            userRepository.save(userMain);
-            bookstoreUserRepository.save(user);
-            return user;
+            bookstoreUserRepository.save(userMain);
+            return userMain;
             //
         } else {
             return byPhone;
@@ -76,9 +72,9 @@ public class BookstoreUserRegister {
 //        return null;
     }
 
-    public BookstoreUser changeDataClient(RegistrationForm registrationForm) {
+    public UserEntity changeDataClient(RegistrationForm registrationForm) {
         String name = registrationForm.getName() == null ? "" : registrationForm.getName();
-        BookstoreUser user = (BookstoreUser) getCurrentUser();
+        UserEntity user = (UserEntity) getCurrentUser();
 
         user.setEmail(registrationForm.getMail());
         user.setPhone(registrationForm.getPhone());
@@ -115,7 +111,6 @@ public class BookstoreUserRegister {
         String password = "";
         String phone = "";
         if (bookstoreUserRepository.findBookstoreUserByEmail(email) == null) {
-            BookstoreUser user = new BookstoreUser();
             UserEntity userMain = new UserEntity();
             userMain.setBalance(ThreadLocalRandom.current().nextInt(0, 1000));
             userMain.setName(name);
@@ -123,15 +118,11 @@ public class BookstoreUserRegister {
             userMain.setHash(name.replaceAll(" ", "").toLowerCase()
                     + "_" + ThreadLocalRandom.current().nextInt(0, 100));
 
-            user.setName(name);
-            user.setEmail(email);
-            user.setPhone(phone);
-            user.setPassword(passwordEncoder.encode(password));
+            userMain.setEmail(email);
+            userMain.setPhone(phone);
+            userMain.setPassword(passwordEncoder.encode(password));
 
-            user.setUserId(userMain);
-            userMain.setUserInfoAdditional(user);
-
-            bookstoreUserRepository.save(user);
+            bookstoreUserRepository.save(userMain);
             // userRepository.save(userMain);
         }
 

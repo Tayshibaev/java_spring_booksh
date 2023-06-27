@@ -7,8 +7,8 @@ import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.ResourceStorage;
 import com.example.MyBookShopApp.data.book.links.Book2RatingEntity;
 import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
+import com.example.MyBookShopApp.data.user.UserEntity;
 import com.example.MyBookShopApp.repositories.BookRepository;
-import com.example.MyBookShopApp.security.BookstoreUser;
 import com.example.MyBookShopApp.security.BookstoreUserRegister;
 import com.example.MyBookShopApp.services.BooksRatingStarsService;
 import com.example.MyBookShopApp.services.BooksReviewService;
@@ -64,7 +64,7 @@ public class BooksController {
         model.addAttribute("stars", stars);
         model.addAttribute("review", reviewAndRating);
         try {
-            BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
+            UserEntity user = (UserEntity) userRegister.getCurrentUser();
             model.addAttribute("currUser", user);
             System.out.println("currUser=" + user);
         } catch (Exception e) {
@@ -78,8 +78,8 @@ public class BooksController {
     public String addStarsRating(@PathVariable("slug") String slug, @PathVariable("value") String value, Model model) {
         Book book = bookRepository.findBookBySlug(slug);
         System.out.println("SLUG AND VALUE: " + slug + "  " + value);
-        BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
-        booksRatingStarsService.saveBook2Rating(book, user.getUserId().getId(), value);
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        booksRatingStarsService.saveBook2Rating(book, user.getId(), value);
         return "redirect:/books/" + slug;
     }
 

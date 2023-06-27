@@ -1,9 +1,10 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookstoreUserRepository extends JpaRepository<BookstoreUser, Integer> {
+public interface BookstoreUserRepository extends JpaRepository<UserEntity, Integer> {
 
-    BookstoreUser findBookstoreUserByEmail(String email);
-    BookstoreUser findBookstoreUserByPhone(String phone);
+    UserEntity findBookstoreUserByEmail(String email);
+    UserEntity findBookstoreUserByPhone(String phone);
 }

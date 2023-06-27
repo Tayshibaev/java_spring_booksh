@@ -1,5 +1,7 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.user.UserEntity;
+import com.example.MyBookShopApp.repositories.UserRepository;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +22,7 @@ class BookstoreUserRegisterTests {
     private RegistrationForm registrationForm;
 
     @MockBean
-    private BookstoreUserRepository bookstoreUserRepositoryMock;
+    private UserRepository bookstoreUserRepositoryMock;
 
     @Autowired
     public BookstoreUserRegisterTests(BookstoreUserRegister userRegister, PasswordEncoder passwordEncoder) {
@@ -44,7 +46,7 @@ class BookstoreUserRegisterTests {
 
     @Test
     void registerNewUser() {
-        BookstoreUser user = userRegister.registerNewUser(registrationForm);
+        UserEntity user = userRegister.registerNewUser(registrationForm);
         assertNotNull(user);
         assertTrue(passwordEncoder.matches(registrationForm.getPass(), user.getPassword()));
         assertTrue(CoreMatchers.is(user.getPhone()).matches(registrationForm.getPhone()));
@@ -52,16 +54,16 @@ class BookstoreUserRegisterTests {
         assertTrue(CoreMatchers.is(user.getEmail()).matches(registrationForm.getMail()));
 
         Mockito.verify(bookstoreUserRepositoryMock, Mockito.times(1))
-                .save(Mockito.any(BookstoreUser.class));
+                .save(Mockito.any(UserEntity.class));
     }
 
     @Test
     void registerNewUserFail(){
-        Mockito.doReturn(new BookstoreUser())
+        Mockito.doReturn(new UserEntity())
                 .when(bookstoreUserRepositoryMock)
                 .findBookstoreUserByEmail(registrationForm.getMail());
 
-        BookstoreUser user = userRegister.registerNewUser(registrationForm);
+        UserEntity user = userRegister.registerNewUser(registrationForm);
         assertNull(user);
     }
 }

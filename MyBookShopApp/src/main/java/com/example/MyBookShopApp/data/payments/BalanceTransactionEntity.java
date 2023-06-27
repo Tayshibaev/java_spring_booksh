@@ -1,5 +1,8 @@
 package com.example.MyBookShopApp.data.payments;
 
+import com.example.MyBookShopApp.data.Book;
+import com.example.MyBookShopApp.data.user.UserEntity;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -10,21 +13,23 @@ public class BalanceTransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(columnDefinition = "INT NOT NULL")
-    private int userId;
+    
+    @JoinColumn(name = "user_id", referencedColumnName = "id", columnDefinition = "INT NOT NULL")
+    @ManyToOne
+    private UserEntity userId;//идентификатор пользователя
 
     @Column(columnDefinition = "TIMESTAMP NOT NULL")
-    private LocalDateTime time;
+    private LocalDateTime time;//дата и время транзакции
 
     @Column(columnDefinition = "INT NOT NULL  DEFAULT 0")
-    private int value;
+    private int value;//размер транзакции (положительный — зачисление, отрицательный — списание)
 
-    @Column(columnDefinition = "INT NOT NULL")
-    private int bookId;
+    @JoinColumn(name = "book_id", referencedColumnName = "id", columnDefinition = "INT")
+    @ManyToOne
+    private Book bookId;// книга, за покупку которой произошло списание, или NULL
 
     @Column(columnDefinition = "TEXT NOT NULL")
-    private String description;
+    private String description;//описание транзакции: если зачисление, то откуда, если списание, то на что
 
     public int getId() {
         return id;
@@ -34,11 +39,11 @@ public class BalanceTransactionEntity {
         this.id = id;
     }
 
-    public int getUserId() {
+    public UserEntity getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(UserEntity userId) {
         this.userId = userId;
     }
 
@@ -58,11 +63,11 @@ public class BalanceTransactionEntity {
         this.value = value;
     }
 
-    public int getBookId() {
+    public Book getBookId() {
         return bookId;
     }
 
-    public void setBookId(int bookId) {
+    public void setBookId(Book bookId) {
         this.bookId = bookId;
     }
 

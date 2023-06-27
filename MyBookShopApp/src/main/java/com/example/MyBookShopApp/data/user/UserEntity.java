@@ -3,7 +3,7 @@ package com.example.MyBookShopApp.data.user;
 import com.example.MyBookShopApp.data.BookRatingStars;
 import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
 import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
-import com.example.MyBookShopApp.security.BookstoreUser;
+import com.example.MyBookShopApp.data.payments.BalanceTransactionEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,21 +32,53 @@ public class UserEntity {
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
+    private String email;
+    private String phone;
+    private String password;
+
     @OneToMany(mappedBy = "userId")
     private List<Book2UserEntity> booksToUserEntity;
+
+    @OneToMany(mappedBy = "userId")
+    private List<BalanceTransactionEntity> balanceTransactions;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private BookReviewEntity bookRatingStars;
 
-    @OneToOne(mappedBy = "userId", cascade = CascadeType.ALL)
-    private BookstoreUser userInfoAdditional;
+//    @OneToOne(mappedBy = "userId", cascade = CascadeType.ALL)
+//    private BookstoreUser userInfoAdditional;
+//
+//    public BookstoreUser getUserInfoAdditional() {
+//        return userInfoAdditional;
+//    }
 
-    public BookstoreUser getUserInfoAdditional() {
-        return userInfoAdditional;
+//    public void setUserInfoAdditional(BookstoreUser userInfoAdditional) {
+//        this.userInfoAdditional = userInfoAdditional;
+//    }
+
+
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserInfoAdditional(BookstoreUser userInfoAdditional) {
-        this.userInfoAdditional = userInfoAdditional;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getId() {

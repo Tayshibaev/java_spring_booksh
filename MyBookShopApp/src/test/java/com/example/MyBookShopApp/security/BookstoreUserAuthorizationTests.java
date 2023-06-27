@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.user.UserEntity;
 import com.example.MyBookShopApp.security.jwt.JWTUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,7 +91,7 @@ class BookstoreUserAuthorizationTests {
         Mockito.doReturn(jwtToken)
                 .when(jWTUtil)
                 .generateToken(Mockito.any(UserDetails.class));
-        Mockito.doReturn(new BookstoreUserDetails(new BookstoreUser()))
+        Mockito.doReturn(new BookstoreUserDetails(new UserEntity()))
                 .when(bookstoreUserDetailsServiceMock)
                 .loadUserByUsername(Mockito.any(String.class));
         ContactConfirmationResponse response = userRegister.jwtLogin(payload);

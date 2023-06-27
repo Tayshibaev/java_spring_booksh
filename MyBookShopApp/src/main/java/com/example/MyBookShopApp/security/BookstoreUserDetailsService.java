@@ -1,5 +1,7 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.user.UserEntity;
+import com.example.MyBookShopApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,16 +11,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookstoreUserDetailsService implements UserDetailsService {
 
-    private final BookstoreUserRepository bookstoreUserRepository;
+    private final UserRepository bookstoreUserRepository;
 
     @Autowired
-    public BookstoreUserDetailsService(BookstoreUserRepository bookstoreUserRepository) {
+    public BookstoreUserDetailsService(UserRepository bookstoreUserRepository) {
         this.bookstoreUserRepository = bookstoreUserRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        BookstoreUser bookstoreUser = bookstoreUserRepository.findBookstoreUserByEmail(s);
+        UserEntity bookstoreUser = bookstoreUserRepository.findBookstoreUserByEmail(s);
         if (bookstoreUser != null){
             return new BookstoreUserDetails(bookstoreUser);
         }

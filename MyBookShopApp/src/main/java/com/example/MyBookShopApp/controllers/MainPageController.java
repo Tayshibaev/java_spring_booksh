@@ -7,7 +7,7 @@ import com.example.MyBookShopApp.data.Book;
 import com.example.MyBookShopApp.data.TagEntity;
 import com.example.MyBookShopApp.data.book.review.BookReviewEntity;
 import com.example.MyBookShopApp.data.genre.GenreEntity;
-import com.example.MyBookShopApp.security.BookstoreUser;
+import com.example.MyBookShopApp.data.user.UserEntity;
 import com.example.MyBookShopApp.security.BookstoreUserRegister;
 import com.example.MyBookShopApp.services.*;
 import com.example.MyBookShopApp.DTO.BooksPageDto;
@@ -259,8 +259,8 @@ public class MainPageController {
         Book book = bookService.getBookBySlug(bookId);
         System.out.println("Book" + book);
         String text = bookRevDto.getText();
-        BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
-        booksReviewService.saveBookReview(book.getId(), user.getUserId().getId(), text);
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        booksReviewService.saveBookReview(book.getId(), user.getId(), text);
         return "redirect:/books/" + bookId;
     }
 
@@ -273,8 +273,8 @@ public class MainPageController {
         String like = bookRevDto.getValue();
         String reviewId = bookRevDto.getReviewid();
         BookReviewEntity bookReview = booksReviewService.getBookReviewByReviewId(Integer.parseInt(reviewId));
-        BookstoreUser user = (BookstoreUser) userRegister.getCurrentUser();
-        booksReviewLikeService.saveBookReviewLike(bookReview, user.getUserId().getId(), like);
+        UserEntity user = (UserEntity) userRegister.getCurrentUser();
+        booksReviewLikeService.saveBookReviewLike(bookReview, user.getId(), like);
         Book book = bookService.getBookById(bookReview.getBookId());
         return "redirect:/books/" + book.getSlug()
                 //+ bookId

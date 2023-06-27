@@ -1021,6 +1021,7 @@ insert into books (id, pub_date, is_bestseller, slug, title, image, description,
 insert into books (id, pub_date, is_bestseller, slug, title, image, description, price, discount, author_id) values (999, '2014/04/02', 0, 'book-mas-655', 'Misunderstood', 'http://dummyimage.com/785x363.png/dddddd/000000', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede. Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', 383, 0.14, 10);
 insert into books (id, pub_date, is_bestseller, slug, title, image, description, price, discount, author_id) values (1000, '2013/01/04', 0, 'book-zjr-047', 'Thomas Crown Affair, The', 'http://dummyimage.com/275x387.png/5fa2dd/ffffff', 'In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus.', 371, 0.26, 5);
 
+insert into users (hash, regtime, balance, name, email, password, phone) values ('тимур_38', '2023/05/13', 669, 'Тимур', 'tayshibaevtb@gmail.com', '$2a$10$YsasITD8BbNbgWR5MJCJ0O9bQtJ8xpzVz75lkwMA5OXvnz2v4WY2K', '+7 (705) 801-28-84');
 insert into users ( hash, regTime, balance, name) values ( 'A9EVoj9Q', '2013/01/04', 5316, 'atebbut0');
 insert into users ( hash, regTime, balance, name) values ( 'IIRWhIu3', '2013/01/04', 9332, 'tabden1');
 insert into users ( hash, regTime, balance, name) values ( 'e7aGDsKp', '2013/01/04', 6832, 'sdybald2');
@@ -1041,6 +1042,8 @@ insert into users ( hash, regTime, balance, name) values ( 'vzt4BYWa', '2013/01/
 insert into users ( hash, regTime, balance, name) values ( 'X9hGBfWV', '2013/01/04', 3396, 'thayseldenh');
 insert into users ( hash, regTime, balance, name) values ( 'iYh2tG70', '2013/01/04', 2806, 'vtrewetti');
 insert into users ( hash, regTime, balance, name) values ( 'fpxsB92D', '2013/01/04', 153, 'edikelinj');
+
+
 
 insert into book2user_type (id, code, name) values (1, 'KEPT', 'Отложена');
 insert into book2user_type (id, code, name) values (2, 'CART', 'В корзине');
@@ -3203,3 +3206,13 @@ insert into book_review (book_id,user_id, time,text) values ( 1, 11, to_date('05
 
 
 insert into book_review_like (review_id, user_id, time, value) values ( 1, 14, to_date('05.11.2022', 'DD.MM.YYYY'), 1);
+
+
+insert into balance_transaction(user_id, time, value, book_id , description) values (1, '2022-08-16 02:33:42', 121, null, 'Зачисление средств на счет');
+insert into balance_transaction(user_id, time, value, book_id , description) values (1, '2022-08-17 02:33:42', -20, null, 'Покупка книги ');
+insert into balance_transaction(user_id, time, value, book_id , description) values (1, '2022-08-18 02:33:42', 100, null, 'Зачисление средств на счет');
+insert into balance_transaction(user_id, time, value, book_id , description) values (1, '2022-08-19 02:33:42', 234, null, 'Зачисление средств на счет');
+insert into balance_transaction(user_id, time, value, book_id , description) values (1, '2022-08-20 02:33:42', -190, null, 'Покупка книги ');
+insert into balance_transaction(user_id, time, value, book_id , description) values (1, '2022-08-21 02:33:42', 87, null, 'Зачисление средств на счет');
+insert into balance_transaction(user_id, time, value, book_id , description) values (1, '2022-08-22 02:33:42', -282, null, 'Покупка книги ');
+insert into balance_transaction(user_id, time, value, book_id , description) values (2, '2022-08-22 02:33:42', 99, null, 'Зачисление средств на счет');

@@ -6,8 +6,8 @@ import javax.persistence.*;
 
 
 //Сущность с дополнительной инфой по юзеру для реги по логину и паролю
-@Entity
-@Table(name = "users_contact_add")
+//@Entity
+//@Table(name = "users_contact_add")
 public class BookstoreUser {
 
     @Id

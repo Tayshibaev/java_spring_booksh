@@ -34,7 +34,7 @@ public class SmsService {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         String formContact = contact.replaceAll("[()-]", "");
         String generateCode = generateCode();
-        System.out.println("Phone code is:" + generateCode);
+        System.out.println("Phone CODE is:" + generateCode);
         Message.creator(
                 new PhoneNumber(formContact),
                 new PhoneNumber(TWILIO_NUMBER),

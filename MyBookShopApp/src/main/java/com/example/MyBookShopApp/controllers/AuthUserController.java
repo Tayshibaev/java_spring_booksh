@@ -1,5 +1,6 @@
 package com.example.MyBookShopApp.controllers;
 
+import com.example.MyBookShopApp.DTO.SearchWordDto;
 import com.example.MyBookShopApp.annotation.DurationTrackable;
 import com.example.MyBookShopApp.data.SmsCode;
 import com.example.MyBookShopApp.security.BookstoreUserRegister;
@@ -46,6 +47,11 @@ public class AuthUserController {
         this.tokenBlackListService = tokenBlackListService;
         this.smsService = smsService;
         this.javaMailSender = javaMailSender;
+    }
+
+    @ModelAttribute("searchWordDto")
+    public SearchWordDto searchWordDto() {
+        return new SearchWordDto();
     }
 
     @DurationTrackable

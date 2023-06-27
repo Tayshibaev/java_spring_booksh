@@ -4,6 +4,7 @@ import com.example.MyBookShopApp.data.book.file.BookFile;
 import com.example.MyBookShopApp.data.book.links.Book2GenreEntity;
 import com.example.MyBookShopApp.data.book.links.Book2RatingEntity;
 import com.example.MyBookShopApp.data.book.links.Book2UserEntity;
+import com.example.MyBookShopApp.data.payments.BalanceTransactionEntity;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,6 +42,9 @@ public class Book {
 
     @OneToMany(mappedBy = "bookId")
     private List<Book2UserEntity> book2UserEntities;
+
+    @OneToMany(mappedBy = "bookId")
+    private List<BalanceTransactionEntity> balanceTransactionEntity;
 
     @OneToMany(mappedBy = "bookId")
     private List<Book2RatingEntity> book2RatingEntities;

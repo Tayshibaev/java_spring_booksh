@@ -1,5 +1,7 @@
 package com.example.MyBookShopApp.security;
 
+import com.example.MyBookShopApp.data.user.UserEntity;
+import com.example.MyBookShopApp.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ class BookstoreUserRegistryServiceTests {
     private String email = "test@mail1.org";
 
     @MockBean
-    private BookstoreUserRepository bookstoreUserRepositoryMock;
+    private UserRepository bookstoreUserRepositoryMock;
 
 
     @Autowired
@@ -30,7 +32,7 @@ class BookstoreUserRegistryServiceTests {
 
     @Test
     void authorizationRegistryService() {
-        Mockito.doReturn(new BookstoreUser())
+        Mockito.doReturn(new UserEntity())
                 .when(bookstoreUserRepositoryMock)
                 .findBookstoreUserByEmail(Mockito.any());
 
